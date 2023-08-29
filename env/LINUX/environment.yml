@@ -1,4 +1,4 @@
-name: quantumoonlight
+name: quantum
 channels:
   - conda-forge
   - anaconda
@@ -113,6 +113,7 @@ dependencies:
     - psutil==5.8.0
     - py==1.11.0
     - pycparser==2.21
+    - pydeps==1.12.17
     - pymysql==1.0.2
     - pyparsing==3.0.6
     - pytest==6.2.5
@@ -136,6 +137,7 @@ dependencies:
     - setuptools-scm==6.3.2
     - sklearn==0.0
     - sqlalchemy-utils==0.38.2
+    - stdlib-list==0.9.0
     - stevedore==3.5.0
     - sympy==1.9
     - threadpoolctl==3.0.0
