@@ -26,11 +26,15 @@ jobs:
       run: |
         conda env create -n quantumoonlight -f env/LINUX/environment.yml
 
-    - name: Set up MySQL database
-      run: |
-        sudo apt-get update
-        sudo apt-get install mysql-server -y
-        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'root'; FLUSH PRIVILEGES;"
+    - name: Set up MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql version: '8.0'
+        mysql database: 'quantumknn_db'
+        mysql root password: root
+        mysql user: root
+        mysql password: root
+
 
     - name: Run database tests
       run: |
