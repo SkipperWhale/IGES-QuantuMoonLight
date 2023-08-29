@@ -30,8 +30,7 @@ jobs:
 
     - shell: bash
       run: |
-        conda init bash
-        conda activate env quantumoonlight
+        source activate quantumoonlight
         conda info
         conda list
    
