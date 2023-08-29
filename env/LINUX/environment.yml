@@ -43,7 +43,6 @@ dependencies:
   - openssl=1.1.1l=h8ffe710_0
   - osqp=0.6.2.post0=py37h9386db6_3
   - pip=21.3.1=pyhd8ed1ab_0
-  - pyodbc=4.0.34=py37hd77b12b_0
   - pysocks=1.7.1=py37h03978a9_5
   - python=3.7.11=h6244533_0
   - python_abi=3.7=2_cp37m
