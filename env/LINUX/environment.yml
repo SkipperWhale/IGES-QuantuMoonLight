@@ -4,6 +4,7 @@ channels:
   - anaconda
   - defaults
 dependencies:
+  - pip=22.3.1=py37h06a4308_0
   - flask=2.0.2
   - flask-login=0.5.0
   - sqlalchemy=1.4.27
