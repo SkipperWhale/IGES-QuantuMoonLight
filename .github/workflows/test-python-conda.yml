@@ -28,13 +28,12 @@ jobs:
         mysql user: root
         mysql password: root
 
-    - shell: bash
+    - shell: bash -l {0}
       run: |
-        source activate quantumoonlight
         conda info
         conda list
    
     - name: Run pytest
-      shell: bash
+      shell: bash -l {0}
       run: |
-          $HOME/miniconda/envs/quantumoonlight/bin/pytest
+          pytest
