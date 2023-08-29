@@ -30,11 +30,11 @@ jobs:
 
     - shell: bash
       run: |
+        conda activate env quantumoonlight
         conda info
         conda list
    
     - name: Run pytest
       shell: bash
       run: |
-          conda install pytest
-          pytest
+          $HOME/miniconda/envs/quantumoonlight/bin/pytest
