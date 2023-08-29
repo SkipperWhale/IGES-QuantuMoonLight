@@ -22,12 +22,14 @@ jobs:
         echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> $HOME/.bashrc
         source $HOME/.bashrc
 
+    - name: Initialize Conda
+      run: conda init bash
+
     - name: Create Conda environment
       run: |
         conda env create -n quantumoonlight -f env/LINUX/environment.yml
-        conda activate quantumoonlight
 
-    - name: Set up MySQL
+    - name: Set up MySQL database
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '8.0'
@@ -38,10 +40,10 @@ jobs:
 
     - name: Run tests
       run: |
+        conda activate quantumoonlight
         pytest
 
     - name: Clean up
       run: |
         conda deactivate
         sudo service mysql stop
-
