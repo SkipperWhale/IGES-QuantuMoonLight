@@ -29,4 +29,4 @@ dependencies:
     - mysql-connector-python==8.0.27
     - mysqlclient==2.1.0
     - pymysql==1.0.2
-    - pytest=6.2.5
+    - pytest==6.2.5
