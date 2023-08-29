@@ -9,22 +9,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
+      
+    - name: Setup Miniconda
+      uses: conda-incubator/setup-miniconda@v2.2.0
       with:
+        installer-url: https://repo.anaconda.com/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh 
+        environment-file: env/LINUX/environment.yml
+        activate-environment: quantumoonlight
         python-version: 3.7
 
-    - name: Set up Miniconda
+    - name: Install dependencies
       run: |
-        wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh
-        bash miniconda.sh -b -p $HOME/miniconda
-        echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> $HOME/.bashrc
-        source $HOME/.bashrc
-
-    - name: Create Conda environment
-      run: |
-        conda env create -n quantumoonlight -f env/LINUX/environment.yml
+        conda install -c conda-forge --file env/LINUX/condaenv.313uqqbp.requirements.txt
 
     - name: Set up MySQL database
       uses: mirromutth/mysql-action@v1.1
@@ -37,7 +33,6 @@ jobs:
 
     - name: Run tests
       run: |
-        source activate quantumoonlight
         pytest
 
     - name: Clean up
