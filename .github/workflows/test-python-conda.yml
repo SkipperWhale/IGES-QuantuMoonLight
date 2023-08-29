@@ -17,7 +17,8 @@ jobs:
         environment-file: env/LINUX/environment.yml
         activate-environment: quantumoonlight
         python-version: 3.7
-
+        auto-activate-base: false
+        
     - name: Set up MySQL database
       uses: mirromutth/mysql-action@v1.1
       with:
@@ -27,12 +28,18 @@ jobs:
         mysql user: root
         mysql password: root
 
-    - name: Run tests
+    - shell: bash
       run: |
-        conda activate quantumoonlight
-        pytest
-
-    - name: Clean up
+        conda info
+        conda list
+    - name: Lint
+      shell: bash
       run: |
-        conda deactivate
-        sudo service mysql stop
+          conda install flake8
+          python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          python -m flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Run pytest
+      shell: bash
+      run: |
+          conda install pytest
+          pytest
