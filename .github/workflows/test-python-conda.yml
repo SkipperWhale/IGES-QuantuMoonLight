@@ -22,10 +22,6 @@ jobs:
         echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> $HOME/.bashrc
         source $HOME/.bashrc
 
-        # Initialize Conda
-        conda init bash
-        source $HOME/.bashrc
-
     - name: Create Conda environment
       run: |
         conda env create -n quantumoonlight -f env/LINUX/environment.yml
@@ -41,7 +37,7 @@ jobs:
 
     - name: Run tests
       run: |
-        conda activate quantumoonlight
+        source activate quantumoonlight
         pytest
 
     - name: Clean up
