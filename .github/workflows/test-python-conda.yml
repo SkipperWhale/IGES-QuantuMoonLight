@@ -17,7 +17,8 @@ jobs:
         activate-environment: py37_4.10.3
     - name: Install dependencies
       run: |
-        conda install --file requirements.txt
+        conda env create -f env/LINUX/enviroment.yml
+        conda activate py37_4.10.3
     - name: Run tests
       run: |
         pytest
