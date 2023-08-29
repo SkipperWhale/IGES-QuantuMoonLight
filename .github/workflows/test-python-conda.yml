@@ -22,8 +22,9 @@ jobs:
         echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> $HOME/.bashrc
         source $HOME/.bashrc
 
-    - name: Initialize Conda
-      run: conda init bash
+        # Initialize Conda
+        conda init bash
+        source $HOME/.bashrc
 
     - name: Create Conda environment
       run: |
