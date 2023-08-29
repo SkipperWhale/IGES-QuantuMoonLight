@@ -29,6 +29,7 @@ jobs:
 
     - name: Run tests
       run: |
+        conda activate quantumoonlight
         pytest
 
     - name: Clean up
