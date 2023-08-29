@@ -17,8 +17,8 @@ jobs:
         activate-environment: py37_4.10.3
     - name: Install dependencies
       run: |
-        conda env create -f env/LINUX/environment.yml
-        conda activate py37_4.10.3
+        CONDA_RESTORE_FREE_CHANNEL=1 conda env create -f env/LINUX/environment.yml
+        conda activate quantumoonlight
     - name: Run tests
       run: |
         pytest
