@@ -8,7 +8,7 @@ dependencies:
   - flask=2.0.2
   - flask-login=0.5.0
   - sqlalchemy=1.4.27
-  - selenium
+  - selenium=3.141.0
   - pip:
     - flask-sqlalchemy==2.5.1
     - flask-ckeditor==0.4.6
@@ -30,5 +30,4 @@ dependencies:
     - mysql-connector-python==8.0.27
     - mysqlclient==2.1.0
     - pymysql==1.0.2
-    - pytest
-    - selenium
+    - pytest=6.2.5
