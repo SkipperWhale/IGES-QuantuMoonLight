@@ -30,7 +30,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install mysql-server -y
-        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH '' BY 'root'; FLUSH PRIVILEGES;"
+        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'root'; FLUSH PRIVILEGES;"
 
     - name: Run database tests
       run: |
