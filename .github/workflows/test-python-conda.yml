@@ -4,25 +4,41 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Miniconda
-      uses: conda-incubator/setup-miniconda@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        auto-update-conda: true
         python-version: 3.7
-        activate-environment: py37_4.10.3
-    - name: Install dependencies
+
+    - name: Set up Miniconda
       run: |
-        CONDA_RESTORE_FREE_CHANNEL=1 conda env create -f env/LINUX/environment.yml
+        wget https://repo.anaconda.com/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh -O miniconda.sh
+        bash miniconda.sh -b -p $HOME/miniconda
+        echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> $HOME/.bashrc
+        source $HOME/.bashrc
+
+    - name: Create Conda environment
+      run: |
+        conda env create -n quantumoonlight -f env/LINUX/environment.yml
+
+    - name: Set up MySQL database
+      run: |
+        sudo apt-get update
+        sudo apt-get install mysql-server -y
+        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; FLUSH PRIVILEGES;"
+
+    - name: Run database tests
+      run: |
         conda activate quantumoonlight
-    - name: Run tests
-      run: |
         pytest
-      env:
-        DB_HOST: localhost
-        DB_USER: root
-        DB_PASS: root
+
+    - name: Clean up
+      run: |
+        conda deactivate
+        sudo service mysql stop
+
