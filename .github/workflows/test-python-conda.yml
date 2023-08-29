@@ -17,7 +17,7 @@ jobs:
         activate-environment: py37_4.10.3
     - name: Install dependencies
       run: |
-        conda env create -f env/LINUX/enviroment.yml
+        conda env create -f env/LINUX/environment.yml
         conda activate py37_4.10.3
     - name: Run tests
       run: |
