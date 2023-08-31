@@ -33,3 +33,8 @@ class BlogControl:
         post = Article.query.filter_by(id=post_id).one()
         comments = Comment.query.filter_by(id_article=post_id).all()
         return render_template('post.html', post=post, comments=comments)
+
+    @app.route('/add')
+    @login_required
+    def add():
+        return render_template('add.html')
