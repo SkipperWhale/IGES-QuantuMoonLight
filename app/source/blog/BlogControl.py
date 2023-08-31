@@ -27,3 +27,9 @@ class BlogControl:
         posts = Article.query.filter_by(authorized=False).order_by(Article.data.desc()).all()
 
         return render_template("ArticleApproval.html", posts=posts)
+
+    @app.route('/post/<int:post_id>')
+    def post(post_id):
+        post = Article.query.filter_by(id=post_id).one()
+        comments = Comment.query.filter_by(id_article=post_id).all()
+        return render_template('post.html', post=post, comments=comments)
