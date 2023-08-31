@@ -64,3 +64,26 @@ class BlogControl:
             db.session.commit()
 
         return render_template('add.html')
+    @app.route('/addpost', methods=['POST'])
+    @login_required
+    def addpost():
+        title = request.form['title']
+        author = current_user.username
+        email = current_user.email
+        body = request.form.get('ckeditor')
+
+        label = request.form['flexRadioDefault']
+
+        post = Article(
+            title=title,
+            author=author,
+            body=body,
+            data=datetime.now(),
+            email_user=email,
+            label=label)
+
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(url_for('blog'))
+
