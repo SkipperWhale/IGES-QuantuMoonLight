@@ -105,11 +105,6 @@ def sendEmail():
     return render_template("sendEmail.html")
 
 
-@app.route("/blog")
-def blog():
-    return render_template("blog.html")
-
-
 @app.route("/userPage")
 def userPage():
     return render_template("userPage.html")
@@ -123,12 +118,6 @@ def formPage():
 @app.route("/preprocessingPage")
 def preprocessingPage():
     return render_template("preprocessing.html")
-
-
-@app.route("/blog")
-def blogPage():
-    return render_template("blog.html")
-
 
 @app.route("/aboutUs")
 def aboutUs():

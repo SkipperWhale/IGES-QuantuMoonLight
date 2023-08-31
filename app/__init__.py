@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import database_exists, create_database
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root@127.0.0.1/quantumknn_db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:root@127.0.0.1/quantumknn_db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "jshwifhjwieoajhf5847f5ae4eaws"
 db = SQLAlchemy(app)
@@ -30,4 +30,5 @@ from app.source.preprocessingDataset import PreprocessingControl
 from app.source.validazioneDataset import ValidazioneControl
 from app.source.gestione import GestioneControl
 from app.source.utente import UtenteControl
+from app.source.blog import BlogControl
 from app import routes
