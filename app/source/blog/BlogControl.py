@@ -22,3 +22,8 @@ class BlogControl:
 
         return render_template("blog.html", posts=posts)
 
+    @app.route("/ArticleApproval")
+    def ArticleApproval():
+        posts = Article.query.filter_by(authorized=False).order_by(Article.data.desc()).all()
+
+        return render_template("ArticleApproval.html", posts=posts)
