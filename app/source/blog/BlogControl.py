@@ -103,5 +103,12 @@ class BlogControl:
         db.session.commit()
         return redirect(url_for('ArticleApproval'))
 
+    @app.route('/enableComment/<int:comment_id>', methods=['POST', 'GET'])
+    def enableComment(comment_id):
+        comment = Comment.query.filter_by(id=comment_id).one()
+        comment.authorized = True
+        db.session.commit()
+        return redirect(request.referrer)
+
 
 
