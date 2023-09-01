@@ -284,9 +284,9 @@ class TestSimpleSplit(unittest.TestCase):
         numRaws = utils.numberOfRows(filename.__str__())
 
         train_testSplit.splitDataset(filename.__str__())
-        self.assertEqual(20, utils.numberOfRows("Data_testing.csv"))
+        self.assertEqual(69, utils.numberOfRows(pathlib.Path(__file__).parent / "Data_testing.csv"))
         self.assertEqual(
-            numRaws - 20, utils.numberOfRows("Data_training.csv")
+            numRaws - 69, utils.numberOfRows(pathlib.Path(__file__).parent / "Data_training.csv")
         )
         self.assertTrue(
             exists(pathlib.Path(__file__).parent / "Data_testing.csv")

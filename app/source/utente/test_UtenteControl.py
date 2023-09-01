@@ -13,7 +13,7 @@ class Test_signup(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -33,10 +33,14 @@ class Test_signup(TestCase):
             data=dict(
                 email="mariorossi12@gmail.com",
                 password="prosopagnosia",
+                confirmPassword="prosopagnosia",
                 username="Antonio de Curtis ",
                 token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccd2",
                 nome="Antonio",
                 cognome="De Curtis",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             ),
         )
         statuscode = response.status_code
@@ -59,17 +63,18 @@ class Test_signup(TestCase):
             data=dict(
                 email="mariorossi12@gmail.com",
                 password="prosopagnosia",
+                confirmPassword="prosopagnosia",
                 username="Antonio de Curtis ",
                 token="",
                 nome="Antonio",
                 cognome="De Curtis",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             ),
         )
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
         user = User.query.filter_by(email="mariorossi12@gmail.com").first()
-        self.assertTrue(user)
-        self.assertIsNone(user.token)
+        self.assertIsNone(user)
         db.session.commit()
 
     def test_signupInvalidUsername(self):
@@ -87,6 +92,9 @@ class Test_signup(TestCase):
                 password="prosopagnosia",
                 nome="Antonio",
                 cognome="De Curtis",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             ),
         )
         user = User.query.filter_by(email="mariorossi12@gmail.com").first()
@@ -106,8 +114,12 @@ class Test_signup(TestCase):
             data=dict(
                 password="prosopagnosia",
                 username="Antonio de Curtis ",
-                nome="Antonio",
-                cognome="De Curtis",
+                name="Antonio",
+                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccZZ",
+                surname="De Curtis",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             ),
         )
         user = User.query.filter_by(email="mariorossi12@gmail.com").first()
@@ -124,7 +136,7 @@ class Test_Login_Logout(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -138,6 +150,10 @@ class Test_Login_Logout(TestCase):
                 username="Antonio de Curtis",
                 name="Antonio",
                 surname="De Curtis",
+                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccZZ",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             )
             db.session.add(utente)
             db.session.commit()

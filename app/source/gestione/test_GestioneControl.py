@@ -13,7 +13,7 @@ class TestUser(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         tester = app.test_client(self)
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
@@ -24,9 +24,12 @@ class TestUser(TestCase):
                 email="mariorossi12@gmail.com",
                 password="prosopagnosia",
                 username="Antonio de Curtis ",
+                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccZZ",
                 name="Antonio",
                 surname="De Curtis",
-                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccd2"
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             )
             db.session.add(user)
             db.session.commit()
@@ -91,7 +94,7 @@ class TestList(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         tester = app.test_client(self)
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
@@ -102,29 +105,41 @@ class TestList(TestCase):
                 email="mariorossi12@gmail.com",
                 password="prosopagnosia",
                 username="Antonio de Curtis ",
+                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccZZ",
                 name="Antonio",
                 surname="De Curtis",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             )
             user2 = User(
                 email="giuseppeverdi@gmail.com",
                 password="asperger",
                 username="giuVerdiProXX",
+                token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccZZ",
                 name="Giuseppe",
                 surname="Verdi",
+                isAdmin=False,
+                newsletter=False,
+                isResearcher=False
             )
             art1 = Article(
                 email_user="mariorossi12@gmail.com",
                 title="BuonNatale",
                 body="primobody",
+                author="giuVerdiProXX",
                 category="primaCat",
                 data=datetime(2021, 12, 25),
+                authorized=True
             )
             art2 = Article(
                 email_user="mariorossi12@gmail.com",
                 title="BuonCapodanno",
                 body="secondoBody",
+                author="giuVerdiProXX",
                 category="secondaCat",
                 data=datetime(2022, 1, 1),
+                authorized=True
             )
             db.session.add(user1)
             db.session.add(user2)

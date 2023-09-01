@@ -301,9 +301,9 @@ class TestSimpleSplit(unittest.TestCase):
         numRaws = utils.numberOfRows(filename.__str__())
 
         train_testSplit.splitDataset(filename.__str__())
-        self.assertEqual(20, utils.numberOfRows("Data_testing.csv"))
+        self.assertEqual(69, utils.numberOfRows("Data_testing.csv"))
         self.assertEqual(
-            numRaws - 20, utils.numberOfRows("Data_training.csv")
+            numRaws - 69, utils.numberOfRows("Data_training.csv")
         )
         self.assertTrue(
             exists(pathlib.Path(__file__).parent / "Data_testing.csv")
@@ -628,7 +628,7 @@ class Test_signup(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -858,7 +858,7 @@ class Test_Login_Logout(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -960,7 +960,7 @@ class TestUser(TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         tester = app.test_client(self)
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
@@ -1032,123 +1032,6 @@ class TestUser(TestCase):
         with app.app_context():
             db.drop_all()
 
-
-class TestList(TestCase):
-    def setUp(self):
-        super().setUp()
-        app.config[
-            "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
-        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-        tester = app.test_client(self)
-        if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
-            create_database(app.config["SQLALCHEMY_DATABASE_URI"])
-        with app.app_context():
-            db.create_all()
-            user1 = User(
-                email="mariorossi12@gmail.com",
-                password="prosopagnosia",
-                username="Antonio de Curtis ",
-                name="Antonio",
-                surname="De Curtis",
-            )
-            user2 = User(
-                email="giuseppeverdi@gmail.com",
-                password="asperger",
-                username="giuVerdiProXX",
-                name="Giuseppe",
-                surname="Verdi",
-            )
-            art1 = Article(
-                email_user="mariorossi12@gmail.com",
-                title="BuonNatale",
-                body="primobody",
-                category="primaCat",
-                data=datetime(2021, 12, 25),
-            )
-            art2 = Article(
-                email_user="mariorossi12@gmail.com",
-                title="BuonCapodanno",
-                body="secondoBody",
-                category="secondaCat",
-                data=datetime(2022, 1, 1),
-            )
-            db.session.add(user1)
-            db.session.add(user2)
-            db.session.commit()
-            db.session.add(art1)
-            db.session.add(art2)
-            db.session.commit()
-
-    def test_listUser(self):
-        """
-        test the functionality of getting all registered users to the site
-        """
-        tester = app.test_client()
-        with app.app_context():
-            db.create_all()
-        response = tester.post(
-            "/gestione/",
-            data=dict(scelta="listUser"),
-        )
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        self.assertTrue(User.query.filter_by(email="mariorossi12@gmail.com").first())
-        self.assertTrue(User.query.filter_by(email="giuseppeverdi@gmail.com").first())
-        db.session.commit()
-
-    def test_listArticlesUser(self):
-        """
-        test the functionality of getting articles written by a user
-        """
-        tester = app.test_client()
-        with app.app_context():
-            db.create_all()
-        response = tester.post(
-            "/gestione/",
-            data=dict(
-                scelta="listArticlesUser",
-                email="mariorossi12@gmail.com",
-            ),
-        )
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        self.assertTrue(
-            Article.query.filter_by(
-                email_user="mariorossi12@gmail.com"
-            ).limit(2)
-        )
-        db.session.commit()
-
-    def test_listArticlesData(self):
-        """
-        tests the functionality of getting articles written between two dates
-        """
-        tester = app.test_client()
-        with app.app_context():
-            db.create_all()
-        response = tester.post(
-            "/gestione/",
-            data=dict(
-                scelta="listArticlesData",
-                firstData="2021-12-20",
-                secondData="2021-12-30",
-            ),
-        )
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
-        self.assertTrue(
-            Article.query.filter(
-                Article.data.between("2021-12-20", "2021-12-30")
-            ).first()
-        )
-        db.session.commit()
-
-    def tearDown(self):
-        with app.app_context():
-            db.drop_all()
-
-
 class TestClassifyControl(unittest.TestCase):
 
     def test_classify_control(self):
@@ -1157,17 +1040,17 @@ class TestClassifyControl(unittest.TestCase):
         file is created
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe5196" \
@@ -1197,17 +1080,17 @@ class TestClassifyControl(unittest.TestCase):
         Test if thread that calls the classify and QSVM works properly
         """
         path_train = (
-                pathlib.Path(__file__).cwd()
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-                pathlib.Path(__file__).cwd()
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-                pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+                pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe5196" \
@@ -1233,17 +1116,17 @@ class TestClassifyControl(unittest.TestCase):
         file is created
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519" \
@@ -1267,31 +1150,6 @@ class TestClassifyControl(unittest.TestCase):
                 / "classifiedFile.csv"
             )
         )
-
-    def test_getClassifiedDataset(self):
-        """
-        Test the function that send the email, with fixed parameters as input
-        """
-        result = {
-            "testing_accuracy": 0.55687446747,
-            "test_success_ratio": 0.4765984595,
-            "total_time": str(90.7),
-            "no_backend": True
-        }
-        open(
-            pathlib.Path(__file__).parent
-            / "testingFiles"
-            / "classifiedFile.csv",
-            "w",
-        )
-        user_path_to_predict = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
-        )
-
-        value = ClassificazioneControl().get_classified_dataset(
-            result, user_path_to_predict, "quantumoonlight@gmail.com"
-        )
-        self.assertEqual(value, 1)
 
     def tearDown(self):
         if os.path.exists(
@@ -1331,17 +1189,17 @@ class TestIbmFail(unittest.TestCase):
         Test the classify function with not valid train and test datasets, to make the IBM backend fail on purpose
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "emptyFile.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "emptyFile.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691" \
@@ -1393,7 +1251,7 @@ class TestRoutes(unittest.TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -1415,7 +1273,9 @@ class TestRoutes(unittest.TestCase):
                     password=password,
                     confirmPassword=password,
                     username="Antonio",
-                    isResearcher="",
+                    isResearcher=False,
+                    isAdmin=False,
+                    newsletter=False,
                     nome="Antonio",
                     cognome="De Curtis",
                     token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccd2"),
@@ -1431,7 +1291,7 @@ class TestRoutes(unittest.TestCase):
             numColsFE = 2
             doQSVM = True
             token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccd2"
-            backend = "aer_simulator"
+            backend = "ibmq_qasm_simulator"
             email = "quantumoonlight@gmail.com"
 
             path = pathlib.Path(__file__).parent

@@ -17,7 +17,7 @@ class TestRoutes(unittest.TestCase):
         super().setUp()
         app.config[
             "SQLALCHEMY_DATABASE_URI"
-        ] = "mysql://root@127.0.0.1/test_db"
+        ] = "mysql://root:root@127.0.0.1/test_db"
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             create_database(app.config["SQLALCHEMY_DATABASE_URI"])
@@ -39,7 +39,9 @@ class TestRoutes(unittest.TestCase):
                     password=password,
                     confirmPassword=password,
                     username="Antonio",
-                    isResearcher="",
+                    isResearcher=False,
+                    isAdmin=False,
+                    newsletter=False,
                     nome="Antonio",
                     cognome="De Curtis",
                     token="43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691a7ad17643eecbe13d1c8c4adccd2"),

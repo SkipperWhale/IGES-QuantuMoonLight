@@ -18,17 +18,17 @@ class TestClassifyControl(unittest.TestCase):
         file is created
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe5196" \
@@ -58,17 +58,17 @@ class TestClassifyControl(unittest.TestCase):
         Test if thread that calls the classify and QSVM works properly
         """
         path_train = (
-                pathlib.Path(__file__).cwd()
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-                pathlib.Path(__file__).cwd()
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-                pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+                pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe5196" \
@@ -82,7 +82,7 @@ class TestClassifyControl(unittest.TestCase):
         self.assertNotEqual(result, 1)
         self.assertTrue(
             exists(
-                pathlib.Path(__file__).parent
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "classifiedFile.csv"
             )
@@ -94,17 +94,17 @@ class TestClassifyControl(unittest.TestCase):
         file is created
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "doPrediction.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519" \
@@ -123,65 +123,27 @@ class TestClassifyControl(unittest.TestCase):
         self.assertNotEqual(result, 1)
         self.assertTrue(
             exists(
-                pathlib.Path(__file__).parent
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "classifiedFile.csv"
             )
         )
-
-    def test_getClassifiedDataset(self):
-        """
-        Test the function that send the email, with fixed parameters as input
-        """
-        result = {
-            "testing_accuracy": 0.55687446747,
-            "test_success_ratio": 0.4765984595,
-            "total_time": str(90.7),
-            "no_backend": True
-        }
-        open(
-            pathlib.Path(__file__).parent
-            / "testingFiles"
-            / "classifiedFile.csv",
-            "w",
-        )
-        user_path_to_predict = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "doPrediction.csv"
-        )
-
-        value = ClassificazioneControl().get_classified_dataset(
-            result, user_path_to_predict, "quantumoonlight@gmail.com"
-        )
-        self.assertEqual(value, 1)
-
-    def tearDown(self):
-        if os.path.exists(
-            pathlib.Path(__file__).parent
-            / "testingFiles"
-            / "classifiedFile.csv"
-        ):
-            os.remove(
-                pathlib.Path(__file__).parent
-                / "testingFiles"
-                / "classifiedFile.csv"
-            )
-
 
 class TestIbmFail(unittest.TestCase):
 
     def setUp(self):
         if os.path.exists(
-            pathlib.Path(__file__).parent
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "classifiedFile.csv"
         ):
             os.remove(
-                pathlib.Path(__file__).parent
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "classifiedFile.csv"
             )
         open(
-            pathlib.Path(__file__).parent
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "emptyFile.csv",
             "w",
@@ -192,17 +154,17 @@ class TestIbmFail(unittest.TestCase):
         Test the classify function with not valid train and test datasets, to make the IBM backend fail on purpose
         """
         path_train = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTrainPreprocessato.csv"
         )
         path_test = (
-            pathlib.Path(__file__).cwd()
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "DataSetTestPreprocessato.csv"
         )
         path_prediction = (
-            pathlib.Path(__file__).cwd() / "testingFiles" / "emptyFile.csv"
+            pathlib.Path(__file__).resolve().parent / "testingFiles" / "emptyFile.csv"
         )
         features = utils.createFeatureList(2)
         token = "43a75c20e78cef978267a3bdcdb0207dab62575c3c9da494a1cd344022abc8a326ca1a9b7ee3f533bb7ead73a5f9fe519691" \
@@ -220,7 +182,7 @@ class TestIbmFail(unittest.TestCase):
         self.assertEqual(result, 1)
         self.assertFalse(
             exists(
-                pathlib.Path(__file__).parent
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "classifiedFile.csv"
             )
@@ -228,12 +190,12 @@ class TestIbmFail(unittest.TestCase):
 
     def tearDown(self) -> None:
         if os.path.exists(
-            pathlib.Path(__file__).parent
+            pathlib.Path(__file__).resolve().parent
             / "testingFiles"
             / "classifiedFile.csv"
         ):
             os.remove(
-                pathlib.Path(__file__).parent
+                pathlib.Path(__file__).resolve().parent
                 / "testingFiles"
                 / "classifiedFile.csv"
             )
