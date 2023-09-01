@@ -166,7 +166,7 @@ def smista():
     assert isinstance(current_user, User)
     salvataggiodatabase = Dataset(
         email_user=current_user.email,
-        name=dataset_train.filename,
+        name=os.path.basename(dataset_train.filename),
         upload_date=datetime.now(),
         simple_split=bool(simpleSplit),
         ps=bool(prototypeSelection),
