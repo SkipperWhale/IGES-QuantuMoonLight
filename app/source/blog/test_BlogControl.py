@@ -4,28 +4,13 @@ from flask import Flask
 from app.source.blog.BlogControl import BlogControl
 from app.source.model.models import User, Article, Like, Comment
 from datetime import datetime
-from app import app, db
+from app import app
 
 class TestBlogControl(unittest.TestCase):
-    def setUp(self):
-        app.config["TESTING"] = True
-        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test_db.sqlite"
-        db.create_all()
-        self.app = app.test_client()
-        self.blog_control = BlogControl()
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-
-    @patch('app.source.model.models.Article.query')
-    def test_listAllArticles(self, mock_query):
-        """
-        Test retrieving all articles without a specific label.
-        """
-        # Mock la query per Article.query
-        mock_query.order_by.return_value.all.return_value = [
-            Mock(
+    
+    def returnMockElements(self):
+        elements = [Mock(
                 id=1,
                 email_user="mariorossi12@gmail.com",
                 title="Article 1",
@@ -46,16 +31,42 @@ class TestBlogControl(unittest.TestCase):
                 data=datetime(2022, 1, 1),
                 authorized=True,
                 label="Article"
-            )
-        ]
-        mock_article = Mock()
-        mock_article.id = Mock(return_value=1)  # Imposta il mock di Article.id per restituire 1
+            ) ]
+        return elements
 
-        # Configura il mock di Article.query per restituire il mock di Article
-        mock_query.filter_by.return_value.first.return_value = mock_article
+
+    def setUp(self):
+        self.app = app.test_client()
+        self.blog_control = BlogControl()
+
+    """
+    Unit Test retrieving all articles
+    """
+    @patch('app.source.model.models.Article.query')
+    def test_listLabelArticles(self, mock_query):
+        element=self.returnMockElements()
+      
+        # Mock la query per Article.query
+        mock_query.order_by.return_value.all.return_value = element
 
         response = self.app.get("/blog/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(mock_query.order_by.return_value.all.call_args_list), 1)
+        self.assertIn(b"Article 1", response.data)
+        self.assertIn(b"Article 2", response.data)
+
+    """
+    Unit Test retrieving all articles without specific labels
+    """
+    @patch('app.source.model.models.Article.query')
+    def test_ArticlesWithoutLabels(self, mock_query):
+
+        element=self.returnMockElements()
+
+        mock_query.filter_by.return_value.order_by.return_value.all.return_value = element
+        
+        response = self.app.get("/blog/Article")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mock_query.filter_by.return_value.order_by.return_value.all.return_value), 2)
         self.assertIn(b"Article 1", response.data)
         self.assertIn(b"Article 2", response.data)
