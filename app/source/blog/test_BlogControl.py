@@ -9,6 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 from unittest.mock import patch
 
 class TestBlogControl(unittest.TestCase):
+
+    # Configurazione e inizializzazione dell'ambiente di test
     def setUp(self):
         super().setUp()
         app.config[
@@ -74,17 +76,12 @@ class TestBlogControl(unittest.TestCase):
                 label="Article"
             )
 
-            #like1 = Like(email_user="mariorossi12@gmail.com", id_article=art1.id)
-            #like2 = Like(email_user="giuseppeverdi@gmail.com", id_article=art1.id)
-
             db.session.add(user1)
             db.session.add(user2)
             db.session.commit()
             db.session.add(art1)
             db.session.add(art2)
             db.session.add(art3)
-            #self.db.session.add(like1)
-            #self.db.session.add(like2)
 
             db.session.commit()
 
@@ -97,15 +94,16 @@ class TestBlogControl(unittest.TestCase):
                 authorized=False,
                 data = datetime(2023, 9, 1)
             )
-
-            # Aggiungi il commento al database
             db.session.add(comment)
             db.session.commit()
 
+    # Rimuove tutte le tabelle del database nell'ambiente di test         
     def tearDown(self):
         with app.app_context():
             db.drop_all()
 
+    # Verifica che la pagina /blog/ restituisca uno stato HTTP 200 e contenga
+    # i nomi degli articoli "Article 1" e "Article 2" nel corpo della risposta.
     def test_blog_with_no_label(self):
         with app.test_client() as client:
             response = client.get("/blog/")
@@ -113,6 +111,8 @@ class TestBlogControl(unittest.TestCase):
             self.assertIn(b"Article 1", response.data)
             self.assertIn(b"Article 2", response.data)
 
+    # Verifica che la pagina /blog/likes restituisca uno stato HTTP 200 e contenga
+    # i nomi degli articoli "Article 1" e "Article 2" nel corpo della risposta.
     def test_blog_with_label_likes(self):
         with app.test_client() as client:
             response = client.get("/blog/likes")
@@ -120,6 +120,8 @@ class TestBlogControl(unittest.TestCase):
             self.assertIn(b"Article 1", response.data)
             self.assertIn(b"Article 2", response.data)
 
+    # Verifica che la pagina /blog/oldest restituisca uno stato HTTP 200 e contenga
+    # i nomi degli articoli "Article 2" e "Article 1" nel corpo della risposta.
     def test_blog_with_label_oldest(self):
         with app.test_client() as client:
             response = client.get("/blog/oldest")
@@ -134,15 +136,18 @@ class TestBlogControl(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(b"Article 1", response.data)
 
+    # Verifica che la pagina /blog/{custom_label} restituisca uno stato HTTP 200 e contenga
+    # il nome dell'articolo "Article 1" nel corpo della risposta quando si utilizza
+    # la label personalizzata "Article".
     def test_article_approval(self):
         with app.test_client() as client:
             login_response = client.post("/login", data=dict(email= "mariorossi12@gmail.com", password= "prosopagnosia"))
             response = client.get("/ArticleApproval")
 
             self.assertEqual(response.status_code, 200)
-            #self.assertTrue(Article.query.filter_by(title="Article 3").first())
-            #self.assertIn(b"Article 3", response.data)
-
+         
+    # Verifica se la pagina /post/{post_id} restituisce uno stato HTTP 200 e
+    # se il titolo dell'articolo "Article 1" è presente nel corpo della risposta.
     def test_post(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 1").first()
@@ -151,11 +156,13 @@ class TestBlogControl(unittest.TestCase):
                 response = client.get(f"/post/{post_id}")
                 self.assertEqual(response.status_code, 200)
 
-                # Verifica se il titolo dell'articolo è presente nel contenuto della risposta
+                
                 self.assertIn(b"Article 1", response.data)
 
+    # Verifica se l'aggiunta di un nuovo post tramite la pagina /addpost restituisce uno stato HTTP 200
+    # e se la parola chiave 'blog' è presente nel corpo della risposta dopo l'invio del modulo.
     def test_addpost(self):
-        # Assicurati che l'utente sia autenticato (puoi simulare l'autenticazione come necessario)
+        
         with app.test_client() as client:
             with patch('flask_login.current_user', username='giuVerdiProXX', email='giuseppeverdi@gmail.com'):
                 data = {
@@ -167,11 +174,13 @@ class TestBlogControl(unittest.TestCase):
                 # Simuliamo l'invio del modulo
                 response = client.post('/addpost', data=data, follow_redirects=True)
 
-                # Assicurati che la risposta sia stata reindirizzata correttamente alla pagina 'blog'
+                
                 self.assertEqual(response.status_code, 200)
                 self.assertIn(b'blog', response.data)
-                #self.assertIsNotNone(Article.query.filter_by(title="Article 4").first())
-
+               
+    # Verifica se l'abilitazione di un articolo specifico tramite la pagina /enableArticle/{post_id}
+    # restituisce uno stato HTTP 200 e se l'articolo specifico "Article 3" è abilitato nel database
+    # dopo l'operazione.
     def test_enable_article(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 3").first()
@@ -186,6 +195,9 @@ class TestBlogControl(unittest.TestCase):
                 enabled_article = Article.query.filter_by(title="Article 3").first()
                 self.assertTrue(enabled_article.authorized)
 
+    # Verifica se l'eliminazione di un articolo specifico tramite la pagina /deleteArticle/{post_id}
+    # restituisce uno stato HTTP 200 e se l'articolo specifico "Article 3" non esiste più nel database
+    # dopo l'operazione.
     def test_delete_article(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 3").first()
@@ -195,11 +207,13 @@ class TestBlogControl(unittest.TestCase):
                 response = client.get(f'/deleteArticle/{post_id}', follow_redirects=True)
 
                 self.assertEqual(response.status_code, 200)
-                #self.assertIn(b'Article 3', response.data)
 
                 deleted_article = Article.query.filter_by(title="Article 3").first()
                 self.assertIsNone(deleted_article)
 
+    # Verifica se l'abilitazione di un commento specifico tramite la pagina /enableComment/{comment_id}
+    # restituisce un reindirizzamento (stato HTTP 302) e se il commento specifico è abilitato nel database
+    # dopo l'operazione.
     def test_enable_comment(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 1").first()
@@ -213,6 +227,9 @@ class TestBlogControl(unittest.TestCase):
                 enabled_comment = Comment.query.filter_by(id_article=article.id).first()
                 self.assertTrue(enabled_comment.authorized)
 
+    # Verifica se l'eliminazione di un commento specifico tramite la pagina /deleteComment/{comment_id}
+    # restituisce un reindirizzamento (stato HTTP 302) e se il commento specifico non esiste più nel database
+    # dopo l'operazione.
     def test_delete_comment(self):
         with app.test_client() as client:
             comment = Comment.query.first()
@@ -225,6 +242,9 @@ class TestBlogControl(unittest.TestCase):
                 deleted_comment = Comment.query.filter_by(id=comment.id).first()
                 self.assertIsNone(deleted_comment)
 
+    # Verifica se l'aggiunta di un nuovo commento tramite la pagina /addcomment
+    # restituisce uno stato HTTP 200 e se la parola chiave 'post' è presente nel corpo della risposta
+    # dopo l'invio del modulo.
     def test_addComment(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 2").first()
@@ -241,6 +261,9 @@ class TestBlogControl(unittest.TestCase):
                     self.assertEqual(response.status_code, 200)
                     self.assertIn(b'post', response.data)
 
+    # Verifica se l'operazione di "like" su un articolo tramite la pagina /like/{article_id}
+    # restituisce un reindirizzamento (stato HTTP 302) e se il "like" non è presente nel database
+    # dopo l'operazione.
     def test_like(self):
         with app.test_client() as client:
             article = Article.query.filter_by(title="Article 1").first()
