@@ -186,3 +186,66 @@ class TestBlogControl(unittest.TestCase):
                 enabled_article = Article.query.filter_by(title="Article 3").first()
                 self.assertTrue(enabled_article.authorized)
 
+    def test_delete_article(self):
+        with app.test_client() as client:
+            article = Article.query.filter_by(title="Article 3").first()
+            if article:
+                post_id = str(article.id)
+
+                response = client.get(f'/deleteArticle/{post_id}', follow_redirects=True)
+
+                self.assertEqual(response.status_code, 200)
+                #self.assertIn(b'Article 3', response.data)
+
+                deleted_article = Article.query.filter_by(title="Article 3").first()
+                self.assertIsNone(deleted_article)
+
+    def test_enable_comment(self):
+        with app.test_client() as client:
+            article = Article.query.filter_by(title="Article 1").first()
+            comment = Comment.query.filter_by(id_article=article.id).first()
+            if article and comment:
+                comment_id = str(comment.id)
+
+                response = client.get(f'/enableComment/{comment_id}', headers={'Referer': '/previous-page'})
+
+                self.assertEqual(response.status_code, 302)
+                enabled_comment = Comment.query.filter_by(id_article=article.id).first()
+                self.assertTrue(enabled_comment.authorized)
+
+    def test_delete_comment(self):
+        with app.test_client() as client:
+            comment = Comment.query.first()
+            if comment:
+                comment_id = str(comment.id)
+
+                response = client.get(f'/deleteComment/{comment_id}', headers={'Referer': '/previous-page'})
+
+                self.assertEqual(response.status_code, 302)
+                deleted_comment = Comment.query.filter_by(id=comment.id).first()
+                self.assertIsNone(deleted_comment)
+
+    def test_addComment(self):
+        with app.test_client() as client:
+            article = Article.query.filter_by(title="Article 2").first()
+            if article:
+                with patch('flask_login.current_user', username='giuVerdiProXX', email='giuseppeverdi@gmail.com'):
+                    data = {
+                        'content': 'Contenuto del nuovo commento',
+                        'artId': str(article.id)
+                    }
+
+                    # Simuliamo l'invio del modulo
+                    response = client.post('/addcomment', data=data, follow_redirects=True)
+
+                    self.assertEqual(response.status_code, 200)
+                    self.assertIn(b'post', response.data)
+
+    def test_like(self):
+        with app.test_client() as client:
+            article = Article.query.filter_by(title="Article 1").first()
+            with patch('flask_login.current_user', username='giuVerdiProXX', email='giuseppeverdi@gmail.com'):
+                response = client.get('/like/1')
+                self.assertEqual(response.status_code, 302)
+                my_like = Like.query.filter_by(id_article=article.id).first()
+                self.assertIsNone(my_like)
