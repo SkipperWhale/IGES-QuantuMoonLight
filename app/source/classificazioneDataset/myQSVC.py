@@ -13,8 +13,8 @@ from qiskit_machine_learning.kernels import QuantumKernel
 from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score
 import numpy as np
 
-from src.source.utils import utils
-from src.source.utils.utils import createFeatureList, numberOfColumns
+from app.source.utils import utils
+from app.source.utils.utils import createFeatureList, numberOfColumns
 
 
 class myQSVC:

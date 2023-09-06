@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 from sklearn.svm import SVR
 
-from src.source.utils import utils
+from app.source.utils import utils
 
 
 class classicRegressor:

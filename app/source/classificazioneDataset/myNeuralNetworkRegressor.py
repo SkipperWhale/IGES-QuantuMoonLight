@@ -14,8 +14,8 @@ from qiskit_machine_learning.neural_networks import CircuitQNN, two_layer_qnn
 from sklearn.metrics import precision_score, recall_score, accuracy_score, mean_squared_error, mean_absolute_error
 import numpy as np
 
-from src.source.utils import utils
-from src.source.utils.utils import createFeatureList, numberOfColumns
+from app.source.utils import utils
+from app.source.utils.utils import createFeatureList, numberOfColumns
 
 
 class myNeuralNetworkRegressor:

@@ -11,7 +11,7 @@ from qiskit_machine_learning.algorithms import NeuralNetworkClassifier
 from qiskit_machine_learning.neural_networks import CircuitQNN
 from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score
 import numpy as np
-from src.source.utils import utils
+from app.source.utils import utils
 
 class myNeuralNetworkClassifier:
     def classify(pathTrain, pathTest, path_predict, backend, num_qubits, optimizer, loss, max_iter):

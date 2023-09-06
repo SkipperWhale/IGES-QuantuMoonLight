@@ -15,17 +15,17 @@ from flask import request
 from qiskit import IBMQ, Aer
 from qiskit.providers.ibmq import least_busy
 
-from src import app, db
-from src.source.classificazioneDataset.classicClassifier import classicClassifier
-from src.source.classificazioneDataset.classicRegressor import classicRegressor
-from src.source.classificazioneDataset.myNeuralNetworkClassifier import myNeuralNetworkClassifier
-from src.source.classificazioneDataset.myNeuralNetworkRegressor import myNeuralNetworkRegressor
-from src.source.classificazioneDataset.myPegasosQSVC import myPegasosQSVC
-from src.source.classificazioneDataset.myQSVC import myQSVC
-from src.source.classificazioneDataset.myQSVM import myQSVM
-from src.source.classificazioneDataset.myQSVR import myQSVR
-from src.source.model.models import Dataset, User
-from src.source.utils import utils
+from app import app, db
+from app.source.classificazioneDataset.classicClassifier import classicClassifier
+from app.source.classificazioneDataset.classicRegressor import classicRegressor
+from app.source.classificazioneDataset.myNeuralNetworkClassifier import myNeuralNetworkClassifier
+from app.source.classificazioneDataset.myNeuralNetworkRegressor import myNeuralNetworkRegressor
+from app.source.classificazioneDataset.myPegasosQSVC import myPegasosQSVC
+from app.source.classificazioneDataset.myQSVC import myQSVC
+from app.source.classificazioneDataset.myQSVM import myQSVM
+from app.source.classificazioneDataset.myQSVR import myQSVR
+from app.source.model.models import Dataset, User
+from app.source.utils import utils
 
 warnings.simplefilter(action="ignore", category=DeprecationWarning)
 
