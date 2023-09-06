@@ -12,8 +12,8 @@ from deap import creator
 from deap import tools
 from pandas import DataFrame
 from sklearn.neighbors import KNeighborsClassifier
-from src.source.preprocessingDataset import genetic_algorithm as ga
-from src.source.utils import utils
+from app.source.preprocessingDataset import genetic_algorithm as ga
+from app.source.utils import utils
 
 
 def fitness_knn(chromosome, X: DataFrame.values):

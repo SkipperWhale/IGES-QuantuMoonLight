@@ -3,7 +3,7 @@ import pathlib
 import unittest
 from os.path import exists
 
-from src import app
+from app import app
 
 
 class TestPreprocessingControl(unittest.TestCase):

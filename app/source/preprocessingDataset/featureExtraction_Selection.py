@@ -9,7 +9,7 @@ from mpl_toolkits import mplot3d
 from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from src.source.utils import utils
+from app.source.utils import utils
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
