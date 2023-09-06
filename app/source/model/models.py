@@ -33,11 +33,11 @@ class Dataset(db.Model):
     name = db.Column(db.String(30), nullable=False)
     path = db.Column(db.String(150), nullable=True)
     upload_date = db.Column(db.DateTime, nullable=False)
-    simple_split = db.Column(db.Boolean, nullable=True)
-    k_fold = db.Column(db.Boolean, nullable=True)
+    validation = db.Column(db.String(50), nullable=False, default="None")
     ps = db.Column(db.Boolean, nullable=True)
     fe = db.Column(db.Boolean, nullable=True)
-    doQSVM = db.Column(db.Boolean, nullable=True)
+    fs = db.Column(db.Boolean, nullable=True)
+    model = db.Column(db.String(30), nullable=False, default="None")
 
 
 class Article(db.Model):
