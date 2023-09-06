@@ -9,7 +9,7 @@ from app.source.preprocessingDataset import (
     aggId,
     featureExtraction_Selection,
 )
-from src.source.utils import utils
+from app.source.utils import utils
 
 """
 handles the preprocessing process of the dataset

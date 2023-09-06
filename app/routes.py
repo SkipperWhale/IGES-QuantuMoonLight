@@ -10,6 +10,7 @@ from app import app, db
 from app.source.model.models import User, Dataset
 from app.source.utils import utils
 from app.source.utils import addAttribute
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 
 
