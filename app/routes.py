@@ -41,6 +41,10 @@ def showList():
 def adminPage():
     return render_template("adminPage.html")
 
+@app.route("/getStarted")
+def getStarted():
+    return render_template("getStarted.html")
+
 
 @app.route("/adminDataset")
 def adminDataset():
