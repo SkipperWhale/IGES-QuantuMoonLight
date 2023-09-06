@@ -3,13 +3,13 @@ import pathlib
 
 from flask import request, Response
 
-from app import app
-from app.source.preprocessingDataset import (
+from src import app
+from src.source.preprocessingDataset import (
     callPS,
     aggId,
-    featureExtractionPCA,
+    featureExtraction_Selection,
 )
-from app.source.utils import utils
+from src.source.utils import utils
 
 """
 handles the preprocessing process of the dataset
@@ -22,14 +22,20 @@ class PreprocessingControl:
         userpathToPredict = request.form.get("userpathToPredict")
         prototypeSelection = request.form.get("prototypeSelection")
         featureExtraction = request.form.get("featureExtraction")
+        featureSelection = request.form.get("featureSelection")
         numRawsPS = request.form.get("numRawsPS", type=int)
         numColsFE = request.form.get("numColsFE", type=int)
-        doQSVM = request.form.get("doQSVM")
+        numColsFS = request.form.get("numColsFS", type=int)
+        model = request.form.get("model")
+        if model != "None":
+            classification = True
+        else:
+            classification = False
 
         # Cartella dell'utente dove scrivere tutti i risultati
         pathPC = pathlib.Path(userpath).parents[0]
         print("path in PC: ", pathPC)
-        if not featureExtraction and not prototypeSelection and doQSVM:
+        if not featureExtraction and not prototypeSelection and not featureSelection and model == "QSVM":
             # Se l'utente non vuole preprocessare il dataset ma vuole fare QSVM,
             # allora qui creo i dataset da classificare aggiungendo la colonna ID
             aggId.addId(
@@ -46,20 +52,23 @@ class PreprocessingControl:
         numRaws = utils.numberOfRows(userpath)
         numCols = utils.numberOfColumns(userpath)
         if featureExtraction and numColsFE > numCols:
-            print("Impossibile ridurre le colonne: numColsFE > numColsData")
-            return Response(status=400)
+            numColsFE=numCols
+        if featureSelection and numColsFS > numCols:
+            numColsFS = numCols
         if prototypeSelection and numRawsPS > numRaws:
-            print("Impossibile ridurre le righe: numRawsPS > numRawsData ")
-            return Response(status=400)
+            numRawsPS=numRaws
+
 
         PreprocessingControl.preprocessing(
             userpath,
             userpathToPredict,
             prototypeSelection,
             featureExtraction,
+            featureSelection,
             numRawsPS,
             numColsFE,
-            doQSVM,
+            numColsFS,
+            classification,
         )
 
         # Cancello i file di supporto al preprocessing
@@ -76,9 +85,11 @@ class PreprocessingControl:
             userpathToPredict: str,
             prototypeSelection: bool,
             featureExtraction: bool,
+            featureSelection: bool,
             numRowsPS: int,
             numColsFE: int,
-            doQSVM: bool,
+            numColsFS: int,
+            classification: bool,
     ):
         """
         This function is going to preprocess a given Dataset with prototypeSelection or featureExtraction
@@ -89,7 +100,7 @@ class PreprocessingControl:
         :param featureExtraction: boolean flag that indicated whether the user wants to execute a feature Extraction or not
         :param numRowsPS: number of rows the prototype selection should reduce the dataset to
         :param numColsFE: number of columns the feature extraction should reduce the dataset to
-        :param doQSVM: boolean flag that indicated whether the user wants to execute classification or not
+        :param classification: boolean flag that indicated whether the user wants to execute classification or not
         :return: two preprocessed dataset: 'DataSetTrainPreprocessato.csv', 'DataSetTestPreprocessato.csv'
         :rtype: (str, str)
         """
@@ -105,14 +116,17 @@ class PreprocessingControl:
                 numRowsPS,
             )  # create 'reducedTrainingPS.csv'
 
-        if featureExtraction:
-            pathTrain, pathTest = featureExtractionPCA.callFeatureExtraction(
+        if featureExtraction or featureSelection:
+            pathTrain, pathTest = featureExtraction_Selection.callFeatureExtraction_Selection(
+                featureSelection,
+                featureExtraction,
                 pathTrain,
                 pathTest,
                 userpathToPredict,
-                doQSVM,
+                classification,
                 numColsFE,
-            )  # create 'yourPCA_Train', 'yourPCA_Test' and, in case doQSVM=True, 'doPredictionFE.csv'
+                numColsFS
+            )  # create 'yourPCA_Train', 'yourPCA_Test' and, in case classification=True, 'doPredictionFE.csv'
 
         aggId.addId(
             pathTrain,

@@ -1,3 +1,7 @@
+#This code was developed for the paper
+#G. Acampora and A. Vitiello, "TSSweb: a Web Tool for Training Set Selection," 
+#2020 IEEE International Conference on Fuzzy Systems (FUZZ-IEEE), 2020, pp. 1-7, doi: 10.1109/FUZZ48607.2020.9177677.
+
 import random
 import statistics as s
 import time as t
@@ -8,8 +12,8 @@ from deap import creator
 from deap import tools
 from pandas import DataFrame
 from sklearn.neighbors import KNeighborsClassifier
-from app.source.preprocessingDataset import genetic_algorithm as ga
-from app.source.utils import utils
+from src.source.preprocessingDataset import genetic_algorithm as ga
+from src.source.utils import utils
 
 
 def fitness_knn(chromosome, X: DataFrame.values):
