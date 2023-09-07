@@ -2,6 +2,7 @@ import os
 import pathlib
 import unittest
 from os.path import exists
+import re
 
 from app import app
 from app.source.utils import utils
@@ -30,25 +31,25 @@ class TestValidazioneControl(unittest.TestCase):
         Tests when the user wants to validate a dataset with SimpleSplit and checks if the new datasets exist
         """
         tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         userpathTest = None
-        simpleSplit = True
-        kFold = None
+        validation = "Simple Split"
         k = 10
+        dataPath = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         response = tester.post(
             "/validazioneControl",
             data=dict(
                 userpath=userpath,
                 userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
+                validation=validation,
                 k=k,
+                dataPath=dataPath
             ),
         )
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         self.assertTrue(exists(pathData / "Data_training.csv"))
         self.assertTrue(exists(pathData / "Data_testing.csv"))
         self.assertTrue(exists(pathData / "featureDataset.csv"))
@@ -58,28 +59,29 @@ class TestValidazioneControl(unittest.TestCase):
         Tests when the user wants to validate a dataset with kFold and checks if the new datasets exist
         """
         tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         userpathTest = None
-        simpleSplit = None
-        kFold = True
+        validation = "K Fold"
         k = 10
+        dataPath = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         response = tester.post(
             "/validazioneControl",
             data=dict(
                 userpath=userpath,
                 userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
+                validation=validation,
                 k=k,
+                dataPath=dataPath
             ),
         )
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         for x in range(k):
             StringaTrain = "training_fold_{}.csv".format(x + 1)
+            print("\n\nString: " + StringaTrain)
             StringaTest = "testing_fold_{}.csv".format(x + 1)
             self.assertTrue(exists(pathData / StringaTrain))
             self.assertTrue(exists(pathData / StringaTest))
@@ -90,66 +92,29 @@ class TestValidazioneControl(unittest.TestCase):
         and checks if no new datasets exist
         """
         tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         userpathTest = None
-        simpleSplit = None
-        kFold = True
+        validation = "K Fold"
         k = 1
+        dataPath = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         response = tester.post(
             "/validazioneControl",
             data=dict(
                 userpath=userpath,
                 userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
+                validation=validation,
                 k=k,
+                dataPath=dataPath
             ),
         )
         statuscode = response.status_code
         self.assertEqual(statuscode, 400)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         StringaTrain = "training_fold_1.csv"
         StringaTest = "testing_fold_1.csv"
         self.assertFalse(exists(pathData / StringaTrain))
         self.assertFalse(exists(pathData / StringaTest))
-
-    def test_ValidazioneControl_KFold_SimpleSplit(self):
-        """
-        Tests when the user wants to validate a dataset with kFold and SimpleSplit and
-        checks if no new datasets exist because you can not validate a dataset with both kFold
-        and SimpleSplit
-        """
-        tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
-        userpathTest = None
-        simpleSplit = True
-        kFold = True
-        k = 10
-
-        response = tester.post(
-            "/validazioneControl",
-            data=dict(
-                userpath=userpath,
-                userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
-                k=k,
-            ),
-        )
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 400)
-        pathData = pathlib.Path(__file__).parents[0]
-
-        for x in range(k):
-            StringaTrain = "training_fold_{}.csv".format(x + 1)
-            StringaTest = "testing_fold_{}.csv".format(x + 1)
-            self.assertFalse(exists(pathData / StringaTrain))
-            self.assertFalse(exists(pathData / StringaTest))
-
-        self.assertFalse(exists(pathData / "Data_training.csv"))
-        self.assertFalse(exists(pathData / "Data_testing.csv"))
-        self.assertFalse(exists(pathData / "featureDataset.csv"))
 
     def test_ValidazioneControl_NoSplit(self):
         """
@@ -157,25 +122,25 @@ class TestValidazioneControl(unittest.TestCase):
         dataset and checks if the new name of the loaded datasets are Data_training.csv and Data_testing.csv
         """
         tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         userpathTest = pathlib.Path(__file__).parents[0] / "bupa.csv"
-        simpleSplit = None
-        kFold = None
+        validation = None
         k = 10
+        dataPath = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         response = tester.post(
             "/validazioneControl",
             data=dict(
                 userpath=userpath,
                 userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
+                validation=validation,
                 k=k,
+                dataPath=dataPath
             ),
         )
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         self.assertTrue(exists(pathData / "Data_training.csv"))
         self.assertTrue(exists(pathData / "Data_testing.csv"))
 
@@ -185,36 +150,41 @@ class TestValidazioneControl(unittest.TestCase):
          and checks if no new datasets exist
         """
         tester = app.test_client(self)
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         userpathTest = None
-        simpleSplit = None
-        kFold = None
+        validation = None
         k = 10
+        dataPath = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         response = tester.post(
             "/validazioneControl",
             data=dict(
                 userpath=userpath,
                 userpathTest=userpathTest,
-                simpleSplit=simpleSplit,
-                kFold=kFold,
+                validation=validation,
                 k=k,
+                dataPath=dataPath
             ),
         )
         statuscode = response.status_code
         self.assertEqual(statuscode, 400)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         self.assertFalse(exists(pathData / "Data_training.csv"))
         self.assertFalse(exists(pathData / "Data_testing.csv"))
 
     def tearDown(self):
-        directory = pathlib.Path(__file__).parents[0]
-        allFiles = os.listdir(directory)
-        csvFiles = [file for file in allFiles if file.endswith(".csv")]
-        for file in csvFiles:
-            path = os.path.join(directory, file)
-            os.remove(path)
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
+        files_to_keep = ["bupa.csv"]
+
+        files = os.listdir(pathData)
+
+        for file in files:
+            if re.search("\.csv$", file):
+                if file not in files_to_keep:
+                    # cancellalo
+                    os.remove(pathData / file)
+                    print(f"File {file} eliminato.")
 
 
 class TestKFold(unittest.TestCase):
@@ -237,26 +207,31 @@ class TestKFold(unittest.TestCase):
         """
         Tests when the user wants to validate a dataset with kFold and checks if the new datasets exist
         """
-        userpath = pathlib.Path(__file__).parents[0] / "bupa.csv"
+        userpath = pathlib.Path(__file__).parents[0] / "testingFiles" / "bupa.csv"
         k = 10
 
         kFoldValidation.cross_fold_validation(userpath, k)
-        pathData = pathlib.Path(__file__).parents[0]
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
 
         for x in range(k):
             StringaTrain = "training_fold_{}.csv".format(x + 1)
             StringaTest = "testing_fold_{}.csv".format(x + 1)
+            print(StringaTrain)
             self.assertTrue(exists(pathData / StringaTrain))
             self.assertTrue(exists(pathData / StringaTest))
 
     def tearDown(self):
-        directory = pathlib.Path(__file__).parents[0]
-        allFiles = os.listdir(directory)
-        csvFiles = [file for file in allFiles if file.endswith(".csv")]
-        for file in csvFiles:
-            path = os.path.join(directory, file)
-            os.remove(path)
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
+        files_to_keep = ["bupa.csv"]
 
+        files = os.listdir(pathData)
+
+        for file in files:
+            if re.search("\.csv$", file):
+                if file not in files_to_keep:
+                    # cancellalo
+                    os.remove(pathData / file)
+                    print(f"File {file} eliminato.")
 
 class TestSimpleSplit(unittest.TestCase):
     def setUp(self):
@@ -279,24 +254,31 @@ class TestSimpleSplit(unittest.TestCase):
         Tests when the user wants to validate a dataset with SimpleSplit.
         Checks if the new datasets exist and the new datasets have the correct number of rows
         """
-        path = pathlib.Path(__file__).parent
+        path = pathlib.Path(__file__).parents[0] / "testingFiles"
         filename = path / "bupa.csv"
         numRaws = utils.numberOfRows(filename.__str__())
 
         train_testSplit.splitDataset(filename.__str__())
-        self.assertEqual(69, utils.numberOfRows(pathlib.Path(__file__).parent / "Data_testing.csv"))
+        self.assertEqual(69, utils.numberOfRows(pathlib.Path(__file__).parents[0] / "testingFiles" / "Data_testing.csv"))
         self.assertEqual(
-            numRaws - 69, utils.numberOfRows(pathlib.Path(__file__).parent / "Data_training.csv")
+            numRaws - 69, utils.numberOfRows(pathlib.Path(__file__).parents[0] / "testingFiles" / "Data_training.csv")
         )
         self.assertTrue(
-            exists(pathlib.Path(__file__).parent / "Data_testing.csv")
+            exists(pathlib.Path(__file__).parents[0] / "testingFiles" / "Data_testing.csv")
         )
         self.assertTrue(
-            exists(pathlib.Path(__file__).parent / "Data_training.csv")
+            exists(pathlib.Path(__file__).parents[0] / "testingFiles" / "Data_training.csv")
         )
 
     def tearDown(self):
-        path = pathlib.Path(__file__).parent
-        os.remove(path / "Data_testing.csv")
-        os.remove(path / "Data_training.csv")
-        os.remove(path / "bupa.csv")
+        pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
+        files_to_keep = ["bupa.csv"]
+
+        files = os.listdir(pathData)
+
+        for file in files:
+            if re.search("\.csv$", file):
+                if file not in files_to_keep:
+                    # cancellalo
+                    os.remove(pathData / file)
+                    print(f"File {file} eliminato.")
