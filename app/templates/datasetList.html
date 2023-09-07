@@ -1,142 +1,463 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
-
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <meta charset="utf-8">
     <title> QuantuMoonLight </title>
     <link rel="icon" href="../static/images/logos/logo.ico">
 
     <!-- Stylesheets -->
-    <link href="../static/styles/css/revolution-slider.css" rel="stylesheet">
-    <link href="../static/styles/css/style.css" rel="stylesheet">
     <link href="../static/styles/css/nav.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <script type="text/javascript">
+                        // COLLAPSE BUTTON
+                    function collapse(){
+                              var coll = document.getElementsByClassName("collapsible");
+                     var i;
+                     for (i = 0; i < coll.length; i++) {
+                         coll[i].addEventListener("click", function() {
+                            this.classList.toggle("active");
+                            var content = this.nextElementSibling;
+                            if (content.style.maxHeight){
+                                content.style.maxHeight = null;
+                            } else {
+                                content.style.maxHeight = content.scrollHeight + "px";
+                             }
+                      });
+                    }}
+
+                     function checkBoxLimit() {
+                            var checkBoxGroup = document.forms['formDatasets']['selectedDataset'];
+                            var limit = 2;
+                            for (var i = 0; i < checkBoxGroup.length; i++) {
+                                checkBoxGroup[i].onclick = function() {
+                                    var checkedcount = 0;
+                                    for (var i = 0; i < checkBoxGroup.length; i++) {
+                                        checkedcount += (checkBoxGroup[i].checked) ? 1 : 0;
+                                    }
+                                    if (checkedcount > limit) {
+                                        alert("You can select maximum of " + limit + " checkboxes.");
+                                        this.checked = false;
+                                    }
+                                }
+                            }
+                        }
+
+                </script>
+
+    <style>
+
+                h1 {
+                  color: white;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                  font-weight: bold;
+                  margin-left: auto;
+                  margin-right: auto;}
+
+                .intestazione{
+                    background: -moz-linear-gradient(left, #000080 0%, #4B0082 100%);
+                    background: -webkit-linear-gradient(left, #000080 0%, #4B0082 100%);
+                    background: linear-gradient(to right, #000080 0%, #4B0082 100%);
+                    padding-top: 0.5em;
+                    padding-bottom: 0.5em;
+                    color: white;}
+
+                .graph{
+                    float: left;
+                    width: 33.3%;
+                }
+
+                .graph-container{
+                    margin-top: 30px;
+                    width: 100%;
+                    border: none;
+                    text-align: center;
+                    margin-top: 50px;
+                }
+
+                div.divTable {
+                      border: 2px solid #FFFFFF;
+                      width: 100%;
+                      text-align: center;
+                      border-collapse: collapse;
+                }
+
+                .divTable.divTable .divTableCell, .divTable.divTable .divTableHead {
+                      border: 1px solid #FFFFFF;
+                      padding: 4px 5px;
+                }
+
+                .divTable.divTable .divTableBody .divTableCell {
+                      font-size: 13px;
+                    }
+
+                .divTable.divTable .divTableCell:nth-child(even) {
+                      background: #EBEBEB;
+                    }
+
+                .divTable.divTable .divTableHeading {
+                      background: #FFFFFF;
+                      border-bottom: 4px solid #333333;
+                    }
+
+                .divTable.divTable .divTableHeading .divTableHead {
+                      font-size: 15px;
+                      font-weight: bold;
+                      color: #333333;
+                      text-align: center;
+                      border-left: 2px solid #333333;
+                    }
+
+                .divTable.divTable .divTableHeading .divTableHead:first-child {
+                      border-left: none;
+                    }
+
+                .divTable {
+                      font-size: 14px;
+                    }
+
+                .divTable{ display: table; }
+                .divTableRow { display: table-row; }
+                .divTableHeading { display: table-header-group;}
+                .divTableCell, .divTableHead { display: table-cell;}
+                .divTableHeading { display: table-header-group;}
+                .divTableBody { display: table-row-group;}
+
+                /* COLLAPSE BUTTON */
+             .collapsible {
+                  padding: 18px;
+                  width: 100%;
+                  border: none;
+                  text-align: center;
+                  outline: none;
+                  font-size: 18pt;
+                  background: -moz-linear-gradient(left, #000080 0%, #4B0082 100%);
+                  background: -webkit-linear-gradient(left, #000080 0%, #4B0082 100%);
+                  background: linear-gradient(to right, #000080 0%, #4B0082 100%);
+                  color: white;
+                }
+
+                .active, .collapsible:hover {
+                  background-color: #555;
+                }
+
+                .collapsible:after {
+                  content: '\002B';
+                  color: white;
+                  font-weight: bold;
+                  float: right;
+                  margin-left: 5px;
+                }
+
+                .active:after {
+                  content: "\2212";
+                }
+
+                .content {
+                  max-height: 0;
+                  overflow: hidden;
+                  transition: max-height 0.2s ease-out;
+                }
+
+                #compareButton{
+                  padding: 8px;
+                  margin: 3px;
+                  border: none;
+                  text-align: center;
+                  outline: none;
+                  font-size: 13pt;
+                  background: -moz-linear-gradient(left, #000080 0%, #4B0082 100%);
+                  background: -webkit-linear-gradient(left, #000080 0%, #4B0082 100%);
+                  background: linear-gradient(to right, #000080 0%, #4B0082 100%);
+                  color: white;
+                }
+
+                #tooltip
+                {
+                    position: relative;
+                    cursor: pointer;
+                    width: 1%;
+                    display: inline;
+                    margin-right: 2em;
+                    margin-bottom: 1.5em;
+                }
+                #tooltipText
+                {
+                    float: right;
+                    position: center;
+                    top: 0;
+                    margin-left: 2.5em;
+                    margin-right: 14%;
+                    background-color: #4e5b6c;
+                    color: #fff;
+                    white-space: nowrap;
+                    padding: 10px 15px;
+                    border-radius: 7px;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: .4s ease-in-out; /*delay chiusura */
+
+                }
+                #tooltipText::before
+                {
+                    content: "";
+                    position: absolute;
+                    right: 50%;
+
+                }
+                #tooltip:hover #tooltipText
+                {   visibility: visible;
+                    opacity: 90%;
+                    transition: .4s ease-in-out;
+                }
+                #tooltipText:hover /*delay chiusura */
+                {
+                    transition-delay: 5s;
+                    visibility: visible;
+                }
+
+</style>
 
     <!-- Responsive -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link href="../static/styles/css/responsive.css" rel="stylesheet">
-    <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <!--[if lt IE 9]>
-    <script src="../../static/js/respond.js"></script><![endif]-->
-
-
 </head>
 
 <body>
 
-<style>
+    <div class="page-wrapper">
+    {% extends "base.html" %}
+    {% block content %}
 
-table{
-    width: 95%;
-    border: 0.5em #4B0082 solid ;
-    margin: 2em;
-    text-align: center;
-    font-family: "Poppins", sans-serif;
-}
+    <div class="intestazione">
+        <h3 class="text-center">Stats and history of operation</h3>
+    </div>
 
-tr, td, th {
-    margin-left: auto;
-    margin-right: auto;
-    border: #4B0082 solid 0.3em;
-}
+    <div class="graph-container">
 
-thead{
-    background-color: #4B0082;
-    color: white;
-    margin-left: auto;
-    margin-right: auto;
-}
+        <!-- PIE GRAPH CL\RG -->
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.setOnLoadCallback(drawChartCR);
 
-h1 {
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-weight: bold;
-  margin-left: auto;
-  margin-right: auto;
-}
+              function drawChartCR() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Class', 'Number'],
+                    ['QSVM',  {{datasets|selectattr('model',"equalto",'QSVM')|list|length }} ],
+                    ['QSVC',  {{datasets|selectattr('model',"equalto",'QSVC')|list|length }} ],
+                    ['PegasosQSVC',   {{datasets|selectattr('model',"equalto",'Pegasos QSVC')|list|length }} ],
+                    ['Quantum Neural Network',   {{datasets|selectattr('model',"equalto",'Quantum Neural Network')|list|length }} ],
+                    ['QSVR',   {{datasets|selectattr('model',"equalto",'QSVR')|list|length }} ],
+                    ['VQR',   {{datasets|selectattr('model',"equalto",'VQR')|list|length }} ],
+                    ['SVC',  {{datasets|selectattr('model',"equalto",'SVC')|list|length }} ],
+                    ['K Neighbors',  {{datasets|selectattr('model',"equalto",'K Neighbors Classifier')|list|length }} ],
+                    ['Decision Tree',  {{datasets|selectattr('model',"equalto",'Decision Tree Classifier')|list|length }} ],
+                    ['Naive Bayes',  {{datasets|selectattr('model',"equalto",'Naive Bayes')|list|length }} ],
+                    ['Random Forest',  {{datasets|selectattr('model',"equalto",'Random Forest Classifier')|list|length }} ],
+                    ['SVR',  {{datasets|selectattr('model',"equalto",'SVR')|list|length }} ],
+                    ['Linear Regression',  {{datasets|selectattr('model',"equalto",'Linear Regression')|list|length }} ],
+              ]);
 
-#intestazione{
-    background: -moz-linear-gradient(left, #000080 0%, #4B0082 100%);
-    background: -webkit-linear-gradient(left, #000080 0%, #4B0082 100%);
-    background: linear-gradient(to right, #000080 0%, #4B0082 100%);
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    color: white;
-}
+                var options = {
+                    title: 'History of classification and regression algorithms used',
+                    pieHole: 0.25,
+                    pieSliceText: 'value'
+                };
 
+                var chart = new google.visualization.PieChart(document.getElementById("PieChartClass"));
+                chart.draw(data, options);
+              }
+            </script>
 
-</style>
+            <div id="PieChartClass" class="graph"></div>
+    <!-- END GRAPH -->
 
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- BAR CHART -->
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+            google.charts.load("current", {packages:['corechart']});
+            google.charts.setOnLoadCallback(drawBarChart);
 
-<div class="page-wrapper">
-{% extends "base.html" %}
-{% block content %}
-<div id="intestazione"><h1 class="text-center">STORICO DATASET</h1></div>
-<br>
-    <table>
-          <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Used Email</th>
-             <th scope="col">Name</th>
-             <th scope="col">Upload Date</th>
-             <th scope="col">Simple Split</th>
-             <th scope="col">K-Fold</th>
-             <th scope="col">Prototype Selection</th>
-             <th scope="col">Feature Extraction</th>
-             <th scope="doQSVM">QSVM</th>
+              function drawBarChart() {
+                var data = google.visualization.arrayToDataTable([
+                    ['FE-PS', 'Num',  { role: 'annotation' }, {role: 'style'}],
+                    ['Feature Extraction', {{datasets|selectattr('fe')|list|length }} ,  "FE", '#4065c5' ],
+                    ['Prototype Selection', {{datasets|selectattr('ps')|list|length }} , "PS", '#ff9c23' ],
+                    ['Feature Selection', {{datasets|selectattr('fs')|list|length }} ,  "FS", '#c54040' ],
+              ]);
 
-        </tr>
-    </thead>
-         <tbody>
-      {% for item in datasets %}
-        <tr>
-            <td>{{ item.id}}</td>
-            <td>{{ item.email_user}}</td>
-            <td style='font-weight: bold;'>{{ item.name}}</td>
-            <td>{{ item.upload_date}}</td>
-            {% if(item.simple_split) %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
-            {% if(item.k_fold) %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
-            {% if(item.ps) %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
-            {% if(item.fe) %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
-            {% if(item.doQSVM) %}
-            <td>Yes</td>
-            {% else %}
-            <td>No</td>
-            {% endif %}
+                var view = new google.visualization.DataView(data);
 
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table><br>
+                var options = {
+                            title:  'History of FE,PS,FS used',
+                            bar: {groupWidth: "85%"},
+                            vAxis: {format: '0'},
+                            legend: { position: "none" },
+                          };
 
-    <h4 style='font-weight: bold; margin-bottom: 0.4em' class="text-center">Metrics (in %):</h4>
-    <h6 style='font-weight: bold;' class="text-center">Simple Split: {{p_ss|round}}%<br>
-        K-Fold: {{p_kf|round}}%<br>
-        Prototype Selection: {{p_ps|round}}%<br>
-        Feature Extraction: {{p_fe|round}}%<br>
-        QSVM: {{p_ps|round}}%</h6><br>
-{% endblock %}
+                var chart = new google.visualization.ColumnChart(document.getElementById("barchart"));
+                chart.draw(view, options);
+              }
+            </script>
+            <div id="barchart" class="graph"></div>
+    <!-- END BAR CHART -->
+
+    <!-- PIE GRAPH SPLIT -->
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.setOnLoadCallback(drawChartSplit);
+
+              function drawChartSplit() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Split', 'N'],
+                    ['Simple Split',  {{ datasets|selectattr('validation', 'equalto', 'Simple Split')|list|length}}],
+                    ['K Fold',  {{ datasets|selectattr('validation', 'equalto', 'K Fold')|list|length }}],
+                ]);
+
+                var options = {
+                    title: 'History of split algorithms used',
+                    pieHole: 0.25,
+                    pieSliceText: 'value'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById("PieChartSplit"));
+                chart.draw(data, options);
+              }
+            </script>
+
+            <div id="PieChartSplit" class="graph"></div>
+    <!-- END GRAPH -->
+
+        </div>
+    <br><br>
+        <button type="button" class="collapsible" onclick="collapse()">Show all experiments</button>
+
+<div class="content">
+    <form action={{url_for('compareExperiments')}} name="formDatasets" method="post">
+<div class="divTable divTable">
+        <div class="divTableHeading">
+                <div class="divTableRow">
+                    <div class="divTableHead">ID</div>
+                    <div class="divTableHead">Dataset</div>
+                    <div class="divTableHead">Upload Date</div>
+                    <div class="divTableHead">Validation Method</div>
+                    <div class="divTableHead">Preprocessing</div>
+                    <div class="divTableHead">Classificator/Regressor</div>
+                    <div class="divTableHead">Metrics</div>
+                    <div class="divTableHead">Time</div>
+                    <div class="divTableHead">Compare</div>
+                </div>
+        </div>
+ {% for item in datasets %}
+        <div class="divTableBody">
+
+        <div class="divTableRow">
+        <div class="divTableCell">{{ item.id}}</div>
+            <div class="divTableCell"><strong>{{ item.name}}</strong></div>
+            <div class="divTableCell">{{ item.upload_date.strftime('%d/%m/%Y')}}<br>
+                {{ item.upload_date.strftime('%H:%M:%S')}}</div>
+            <div class="divTableCell">
+                {% if(item.validation == 'Simple Split') %}
+                Simple Split
+                {% endif %}
+                {% if(item.validation == 'K Fold') %}
+                K Fold
+                {% endif %}
+            </div>
+            <div class="divTableCell">
+                {% if(item.ps) %}
+                   Prototype Selection with Genetic Algorithm<br>
+                {% endif %}
+
+                {% if(item.fe) %}
+                     Feature Extraction with PCA<br>
+                {% endif %}
+
+                 {% if(item.fs) %}
+                     Feature Selection with K Best<br>
+                {% endif %}
+            </div>
+            <div class="divTableCell">{{ item.model }}</div>
+
+            <div class="divTableCell">
+                {% if(item.model == 'QSVM') or (item.model == 'QSVC') or (item.model == 'Pegasos QSVC') or (item.model == 'Quantum Neural Network') or (item.model == 'SVC')
+                or (item.model == 'K Neighbors Classifier') or (item.model == 'Naive Bayes') or (item.model == 'Decision Tree Classifier') or (item.model == 'Random Forest Classifier') %}
+                    {% if(item.accuracy==-1) %}
+                    Accuracy: N/A<br>
+                    {% else %}
+                    Accuracy: {{'%0.2f'|format(item.accuracy|float)}}% <br>
+                    {% endif %}
+                    {% if(item.precision==-1) %}
+                    Precision: N/A<br>
+                    {% else %}
+                    Precision: {{'%0.2f'|format(item.precision|float)}}% <br>
+                    {% endif %}
+                    {% if(item.recall==-1) %}
+                    Recall: N/A<br>
+                    {% else %}
+                    Recall: {{'%0.2f'|format(item.recall|float)}}%<br>
+                    {% endif %}
+                {% else %} {% if(item.model == 'QSVR') or (item.model == 'VQR') or (item.model == 'Linear Regression') or (item.model == 'SVR') %}
+                    {% if(item.mse==-1) %}
+                    MSE: N/A <br>
+                    {% else %}
+                    MSE: {{'%0.2f'|format(item.mse|float)}}% <br>
+                    {% endif %}
+                    {% if(item.mae==-1) %}
+                    MAE: N/A <br>
+                    {% else %}
+                    MAE: {{'%0.2f'|format(item.mae|float)}}% <br>
+                    {% endif %}
+                    {% if(item.rmse==-1) %}
+                    RMSE: N/A <br>
+                    {% else %}
+                    RMSE: {{'%0.2f'|format(item.rmse|float)}}% <br>
+                    {% endif %}
+                    {% if(item.r2==-1) %}
+                    R2: N/A <br>
+                    {% else %}
+                    R2: {{'%0.2f'|format(item.r2|float)}}% <br>
+                    {% endif %}
+                {% endif %} {% endif %}
+            </div>
+            <div class="divTableCell">
+                {% if(item.training_time==-1) %}
+                Training time: N/A<br>
+                {% else %}
+                Training time: {{ item.training_time}}s<br>
+                {% endif %}
+                {% if(item.total_time==-1) %}
+                Total time: N/A<br>
+                {% else %}
+                Total time: {{ item.total_time}}s<br>
+                {% endif %}
+            </div>
+<div class="divTableCell checkboxGroup">
+    <input type="checkbox" id="selectedDataset" class="cb" name="selectedDataset" value="{{item.id}}">
 </div>
+            <script type="text/javascript">checkBoxLimit()</script>
+
+        </div>
+
+        </div>
+{% endfor %}
+      </div><!-- DIV TABLE CLOSE -->
+        <input type="submit" id="compareButton" value="Compare experiments">
+        <div id="tooltip">
+            <span id="tooltipText"> <a href="www.google.com"></a>
+               Select the datasets to be compared by checking the checkboxes and click on the button on the left
+                <br><strong>it's not possible to obtain performance metrics on datasets processed with different algorithm (e.g. classification/regression)</strong></span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="info" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>
+        </div>
+    </form>
+    </div>
+</div>
+{% endblock %}
 </body>
 </html>
