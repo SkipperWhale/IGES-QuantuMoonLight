@@ -1,20 +1,23 @@
 import os
 import pathlib
+import pytest
 import unittest
 from os.path import exists
 from unittest.mock import patch
-from app.source.model.models import User
+from app.source.model.models import User, Dataset
 import flask
 import re
 
 from app import app
 from app.source.classificazioneDataset.ClassifyControl import ClassificazioneControl
 from app.source.utils import utils
+from datetime import datetime
 
 
 
 class TestClassifyControl(unittest.TestCase):
 
+    @pytest.mark.run(order=3)
     def test_classify_control(self):
         """
         Test the input coming from the form and the status code returned, and check if the classification result
@@ -56,8 +59,10 @@ class TestClassifyControl(unittest.TestCase):
         statuscode = response.status_code
         self.assertEqual(200, statuscode)
 
+    @pytest.mark.run(order=1)
     @patch('app.source.model.models.User.query')
-    def test_classification_thread(self, mock_query):
+    @patch('app.source.model.models.Dataset.query')
+    def test_classification_thread(self, mock_dataset_query, mock_user_query):
         """
         Test if thread that calls the classify and QSVM works properly
         """
@@ -93,7 +98,30 @@ class TestClassifyControl(unittest.TestCase):
         user_id = email
 
         user = User(email='quantumoonlight@gmail.com', password='quercia', isResearcher=False)
-        mock_query.filter_by.return_value.first.return_value = user
+        mock_user_query.filter_by.return_value.first.return_value = user
+        dataset = Dataset(
+                        id=1,
+                        email_user='quantum@gmail.com',
+                        name='test',
+                        path='',
+                        upload_date=datetime.now(),
+                        validation='Simple Split',
+                        ps=0,
+                        fe=0,
+                        fs=None,
+                        model='SVC',
+                        accuracy=71.0145,
+                        precision=71.2513,
+                        recall=71.0145,
+                        mse=-1,
+                        mae=-1,
+                        rmse=-1,
+                        r2=-1,
+                        f1=69.4392,
+                        training_time=0,
+                        total_time=0
+                    )
+        mock_dataset_query.get.return_value = dataset
 
         result = ClassificazioneControl().classification_thread(path_train,
                                                                 path_test,
@@ -123,8 +151,10 @@ class TestClassifyControl(unittest.TestCase):
             )
         )
 
+    @pytest.mark.run(order=2)
     @patch('app.source.model.models.User.query')
-    def test_classify(self, mock_query):
+    @patch('app.source.model.models.Dataset.query')
+    def test_classify(self, mock_dataset_query, mock_user_query):
         """
         Test the classify function with correct parameters and input files, and check if the classification result
         file is created
@@ -161,7 +191,30 @@ class TestClassifyControl(unittest.TestCase):
         user_id = "quantumoonlight@gmail.com"
 
         user = User(email='quantumoonlight@gmail.com', password='quercia', isResearcher=False)
-        mock_query.filter_by.return_value.first.return_value = user
+        mock_user_query.filter_by.return_value.first.return_value = user
+        dataset = Dataset(
+            id=1,
+            email_user='quantum@gmail.com',
+            name='test',
+            path='',
+            upload_date=datetime.now(),
+            validation='Simple Split',
+            ps=0,
+            fe=0,
+            fs=None,
+            model='SVC',
+            accuracy=71.0145,
+            precision=71.2513,
+            recall=71.0145,
+            mse=-1,
+            mae=-1,
+            rmse=-1,
+            r2=-1,
+            f1=69.4392,
+            training_time=0,
+            total_time=0
+        )
+        mock_dataset_query.get.return_value = dataset
 
         result = ClassificazioneControl().classify(
             path_train,
