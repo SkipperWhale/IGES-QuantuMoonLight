@@ -27,11 +27,12 @@ class PreprocessingControl:
         numColsFE = request.form.get("numColsFE", type=int)
         numColsFS = request.form.get("numColsFS", type=int)
         model = request.form.get("model")
-        if model != "None":
+        if model != None:
             classification = True
         else:
             classification = False
 
+        print("\n\n\nclassificazione: " + str(classification))
         # Cartella dell'utente dove scrivere tutti i risultati
         pathPC = pathlib.Path(userpath).parents[0]
         print("path in PC: ", pathPC)
