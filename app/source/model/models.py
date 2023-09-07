@@ -38,6 +38,16 @@ class Dataset(db.Model):
     fe = db.Column(db.Boolean, nullable=True)
     fs = db.Column(db.Boolean, nullable=True)
     model = db.Column(db.String(30), nullable=False, default="None")
+    accuracy = db.Column(db.Float, nullable=True, default=-1)
+    precision = db.Column(db.Float, nullable=True, default=-1)
+    recall = db.Column(db.Float, nullable=True, default=-1)
+    mse = db.Column(db.Float, nullable=True, default=-1)
+    mae = db.Column(db.Float, nullable=True, default=-1)
+    rmse = db.Column(db.Float, nullable=True, default=-1)
+    r2 = db.Column(db.Float, nullable=True, default=-1)
+    f1 = db.Column(db.Float, nullable=True, default=-1)
+    training_time = db.Column(db.Integer, nullable=True, default=-1)
+    total_time = db.Column(db.Integer, nullable=True, default=-1)
 
 
 class Article(db.Model):
