@@ -46,6 +46,117 @@ def adminPage():
 def getStarted():
     return render_template("getStarted.html")
 
+@app.route("/userDataset")
+def userDataset():
+    datasets = Dataset.query.filter_by(email_user=current_user.email)
+    return render_template("datasetList.html", datasets=datasets)
+
+@app.route("/compareExperiments", methods=['POST'])
+def compareExperiments():
+    listDataset = request.form.getlist('selectedDataset')
+    datasets = Dataset.query.filter(Dataset.id.in_(listDataset)).all()
+
+    # COMPARISION FOR TOTAL TIME
+    maxTotalTime = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.total_time).first()
+    minTotalTime = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.total_time.desc()).first()
+
+    # COMPARISION FOR TRAINING TIME
+    maxTrainingTime = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.training_time).first()
+    minTrainingTime = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.training_time.desc()).first()
+
+    # COMPARISION FOR PRECISION
+    maxPrecision = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.precision).first()
+    minPrecision = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.precision.desc()).first()
+
+    # COMPARISION FOR ACCURACY
+    maxAccuracy = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.accuracy).first()
+    minAccuracy = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.accuracy.desc()).first()
+
+    # COMPARISION FOR RECALL
+    maxRecall = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.recall).first()
+    minRecall = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.recall.desc()).first()
+
+    maxF1 = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.f1).first()
+    minF1 = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.f1.desc()).first()
+
+    # COMPARISION FOR MSE
+    maxMSE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.mse).first()
+    minMSE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.mse.desc()).first()
+
+    # COMPARISION FOR MAE
+    maxMAE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.mae).first()
+    minMAE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.mae.desc()).first()
+
+    # COMPARISION FOR RMSE
+    maxRMSE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.rmse).first()
+    minRMSE = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.rmse.desc()).first()
+
+    maxR2 = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.r2).first()
+    minR2 = Dataset.query.filter(
+        Dataset.id.in_(listDataset)).order_by(
+        Dataset.r2.desc()).first()
+
+    return render_template("compareExperiments.html",
+                           datasets=datasets,
+                           maxTotalTime=maxTotalTime,
+                           minTotalTime=minTotalTime,
+                           maxTrainingTime=maxTrainingTime,
+                           minTrainingTime=minTrainingTime,
+                           maxPrecision=maxPrecision,
+                           minPrecision=minPrecision,
+                           maxAccuracy=maxAccuracy,
+                           minAccuracy=minAccuracy,
+                           maxRecall=maxRecall,
+                           minRecall=minRecall,
+                           maxMSE=maxMSE,
+                           minMSE=minMSE,
+                           maxMAE=maxMAE,
+                           minMAE=minMAE,
+                           maxRMSE=maxRMSE,
+                           minRMSE=minRMSE,
+                           maxF1=maxF1,
+                           minF1=minF1,
+                           maxR2=maxR2,
+                           minR2=minR2
+                           )
 
 @app.route("/adminDataset")
 def adminDataset():
@@ -69,30 +180,6 @@ def adminDataset():
     p5 = v5 * 100 / rows
     return render_template("datasetList.html", datasets=datasets, p_ss=p1, p_kf=p2,
                            p_ps=p3, p_fe=p4, p_qv=p5)
-
-
-@app.route("/userDataset")
-def userDataset():
-    datasets = Dataset.query.filter_by(email_user=current_user.email)
-    rows = Dataset.query.filter_by(email_user=current_user.email).count()
-    v1 = 0
-    v2 = 0
-    v3 = 0
-    v4 = 0
-    v5 = 0
-    for dataset in datasets:
-        if dataset.simple_split: v1 += 1
-        if dataset.k_fold: v2 += 1
-        if dataset.ps: v3 += 1
-        if dataset.fe: v4 += 1
-        if dataset.doQSVM: v5 += 1
-    p1 = v1 * 100 / rows
-    p2 = v2 * 100 / rows
-    p3 = v3 * 100 / rows
-    p4 = v4 * 100 / rows
-    p5 = v5 * 100 / rows
-    return render_template("datasetList.html", datasets=datasets, p_ss="{:.2f}".format(p1), p_kf="{:.2f}".format(p2),
-                           p_ps="{:.2f}".format(p3), p_fe="{:.2f}".format(p4), p_qv="{:.2f}".format(p5))
 
 
 @app.route("/modifyUserPage")
