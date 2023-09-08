@@ -27,7 +27,7 @@ class TestValidazioneControl(unittest.TestCase):
 
         self.assertTrue(exists(pathMock / "bupa.csv"))
 
-# Testa la funzionalità di validazione con SimpleSplit. Verifica che i nuovi dataset siano creati correttamente.
+# TC2_011: Testa la funzionalità di validazione con SimpleSplit. Verifica che i nuovi dataset siano creati correttamente.
 
     def test_ValidazioneControl_SimpleSplit(self):
         """
@@ -57,7 +57,7 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertTrue(exists(pathData / "Data_testing.csv"))
         self.assertTrue(exists(pathData / "featureDataset.csv"))
 
-    # Testa la funzionalità di validazione con K Fold. Verifica che i nuovi dataset siano creati correttamente.
+    # TC2_012: Testa la funzionalità di validazione con K Fold. Verifica che i nuovi dataset siano creati correttamente.
 
     def test_ValidazioneControl_KFold(self):
         """
@@ -91,7 +91,7 @@ class TestValidazioneControl(unittest.TestCase):
             self.assertTrue(exists(pathData / StringaTrain))
             self.assertTrue(exists(pathData / StringaTest))
 
-    # Testa la funzionalità di validazione con K Fold quando il valore "k" non è corretto.
+    # TC2_013: Testa la funzionalità di validazione con K Fold quando il valore "k" non è corretto.
 # Verifica che nessun nuovo dataset sia creato e che la risposta HTTP sia 400 (Bad Request).
 
     def test_ValidazioneControl_kFold_Fail(self):
@@ -124,7 +124,7 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertFalse(exists(pathData / StringaTrain))
         self.assertFalse(exists(pathData / StringaTest))
 
-    # Testa la funzionalità di validazione senza divisione del dataset.
+    # TC2_014: Testa la funzionalità di validazione senza divisione del dataset.
     # Verifica che i nuovi dataset siano creati correttamente.
     def test_ValidazioneControl_NoSplit(self):
         """
@@ -154,10 +154,8 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertTrue(exists(pathData / "Data_training.csv"))
         self.assertTrue(exists(pathData / "Data_testing.csv"))
 
-# Testa la funzionalità di validazione senza divisione del dataset quando il dataset di test non è stato caricato.
-# Verifica che nessun nuovo dataset sia creato e che la risposta HTTP sia 400 (Bad Request).
-
-
+    # TC2_015: Testa la funzionalità di validazione senza divisione del dataset quando il dataset di test non è stato caricato.
+    # Verifica che nessun nuovo dataset sia creato e che la risposta HTTP sia 400 (Bad Request).
     def test_ValidazioneControl_NoSplit_Fail(self):
         """
         Tests when the user doesn't want to validate the dataset and has not uploaded the test Set
@@ -220,7 +218,7 @@ class TestKFold(unittest.TestCase):
 
         self.assertTrue(exists(pathMock / "bupa.csv"))
 
-    # Testa la funzionalità di K-Fold validation. Verifica che i nuovi dataset siano creati correttamente.
+    # TC2_016: Testa la funzionalità di K-Fold validation. Verifica che i nuovi dataset siano creati correttamente.
     def test_KFold(self):
         """
         Tests when the user wants to validate a dataset with kFold and checks if the new datasets exist
@@ -271,7 +269,7 @@ class TestSimpleSplit(unittest.TestCase):
         self.assertTrue(exists(pathMock / "bupa.csv"))
 
     
-    #Verifica quando l'utente desidera convalidare un dataset con SimpleSplit.
+    #TC2_017: Verifica quando l'utente desidera convalidare un dataset con SimpleSplit.
     #Verifica se i nuovi dataset esistono e se hanno il numero corretto di righe.
 
     def test_simpleSplit(self):
