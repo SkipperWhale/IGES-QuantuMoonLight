@@ -27,6 +27,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class TestRoutes(unittest.TestCase):
+
+    # Imposta l'ambiente per i test, inizializzando la configurazione del database e creando il database se non esiste.
     def setUp(self):
         super().setUp()
         app.config[
@@ -38,6 +40,8 @@ class TestRoutes(unittest.TestCase):
         with app.app_context():
             db.create_all()
 
+    # Testa le route dell'applicazione web, inclusi i test per la registrazione e il login dell'utente, la configurazione dei dati di input,
+    # e l'esecuzione del processo di validazione, preprocessing e classificazione.  
     def test_routes(self):
         # Login User and test if that works
         tester = app.test_client()
@@ -118,12 +122,14 @@ class TestRoutes(unittest.TestCase):
             self.assertTrue(exists(pathData / "yourPCA_Train.csv"))
             self.assertTrue(exists(pathData / "yourPCA_Test.csv"))
 
+    # Distrugge il database e pulisce l'ambiente dei test.
     def tearDown(self):
         with app.app_context():
             db.drop_all()
 
 class TestCompareExpriment(unittest.TestCase):
 
+# Imposta l'ambiente per i test, creando un utente e due dataset di esempio.
     def setUp(self):
         super().setUp()
         with app.app_context():
@@ -190,6 +196,7 @@ class TestCompareExpriment(unittest.TestCase):
 
             self.driver = webdriver.Chrome()
 
+    # Distrugge l'ambiente dei test, chiuso il browser e cancella gli utenti e i dataset creati durante i test.
     def tearDown(self):
         with app.app_context():
             self.driver.quit()
@@ -200,6 +207,9 @@ class TestCompareExpriment(unittest.TestCase):
             db.session.delete(user)
             db.session.commit()
     @patch('app.source.model.models.Dataset.query')
+
+    # Testa la funzionalità di confronto degli esperimenti sul lato frontend dell'applicazione web.
+    # Questo test simula l'interazione dell'utente con l'interfaccia utente web.
     def test_compare_dataset(self, mock_query):
         with app.test_client() as client:
             with patch('flask_login.current_user', username='giuVerdiProXX', email='giuseppeverdi@gmail.com'):
@@ -257,6 +267,9 @@ class TestCompareExpriment(unittest.TestCase):
                 response = client.post('/compareExperiments', data=data, follow_redirects=True)
                 self.assertEqual(response.status_code, 200)
                 self.assertIn(b"SVC", response.data)
+
+      # Testa la funzionalità di confronto degli esperimenti sul lato backend dell'applicazione web.
+    # Questo test simula la richiesta POST per il confronto degli esperimenti e verifica che la risposta sia 200 (OK).          
     def test_compare_experiment_frontend(self):
         self.driver.get("http://127.0.0.1:5000/")
         self.driver.set_window_size(1550, 830)

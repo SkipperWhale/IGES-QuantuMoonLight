@@ -14,9 +14,11 @@ from app.source.utils import utils
 from datetime import datetime
 
 
-
+# Classe di test per la classificazione
 class TestClassifyControl(unittest.TestCase):
-
+    
+    # Test del punto di controllo della classificazione mediante l'invio di una richiesta POST con dati specifici 
+    # e verifica del codice di stato HTTP. Inoltre, verifica la creazione di un file di risultati della classificazione.
     @pytest.mark.run(order=3)
     def test_classify_control(self):
         """
@@ -59,6 +61,9 @@ class TestClassifyControl(unittest.TestCase):
         statuscode = response.status_code
         self.assertEqual(200, statuscode)
 
+
+    # Test se il thread di classificazione, responsabile dell'esecuzione della classificazione
+    # funziona correttamente con interrogazioni al database simulate e vari parametri di tune di iperpaametri di input.
     @pytest.mark.run(order=1)
     @patch('app.source.model.models.User.query')
     @patch('app.source.model.models.Dataset.query')
@@ -151,6 +156,8 @@ class TestClassifyControl(unittest.TestCase):
             )
         )
 
+# Testa la funzione di classificazione, in modo unitario, con parametri e file di input corretti
+# e verifica la creazione del file di risultati della classificazione. 
     @pytest.mark.run(order=2)
     @patch('app.source.model.models.User.query')
     @patch('app.source.model.models.Dataset.query')
@@ -246,8 +253,10 @@ class TestClassifyControl(unittest.TestCase):
             )
         )
 
-class TestIbmFail(unittest.TestCase):
 
+# Classe di testing modulo IBMQ
+class TestIbmFail(unittest.TestCase):
+    #Setup
     def setUp(self):
         if os.path.exists(
             pathlib.Path(__file__).resolve().parent
@@ -265,6 +274,9 @@ class TestIbmFail(unittest.TestCase):
             / "emptyFile.csv",
             "w",
         ).write("1234567890987654321")
+
+# Testa la funzione di classificazione con set di dati di addestramento e di test non validi,
+# allo scopo di far fallire intenzionalmente il backend IBM.
 
     @patch('app.source.model.models.User.query')
     def test_classify_ibmFail(self, mock_query):
@@ -334,6 +346,8 @@ class TestIbmFail(unittest.TestCase):
             )
         )
 
+
+    # TearDown
     def tearDown(self) -> None:
         pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         files_to_keep = ["bupa.csv", "DataSetTestPreprocessato.csv", "DataSetTrainPreprocessato.csv", "Data_training.csv", "doPrediction.csv"]

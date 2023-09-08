@@ -11,10 +11,11 @@ from app.source.validazioneDataset import train_testSplit
 
 
 class TestValidazioneControl(unittest.TestCase):
+
+    # Imposta l'ambiente per i test, creando una copia del dataset di test "bupa.csv" nella directory dei test.
+
     def setUp(self):
-        # path del dataset a disposizione del testing
         pathOrigin = pathlib.Path(__file__).parents[0] / "testingFiles"
-        # path della cartella dove scrivere i files che verranno letti dai test
         pathMock = pathlib.Path(__file__).parents[0]
 
         f = open((pathMock / "bupa.csv").__str__(), "a+")
@@ -25,6 +26,8 @@ class TestValidazioneControl(unittest.TestCase):
         g.close()
 
         self.assertTrue(exists(pathMock / "bupa.csv"))
+
+# Testa la funzionalità di validazione con SimpleSplit. Verifica che i nuovi dataset siano creati correttamente.
 
     def test_ValidazioneControl_SimpleSplit(self):
         """
@@ -53,6 +56,8 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertTrue(exists(pathData / "Data_training.csv"))
         self.assertTrue(exists(pathData / "Data_testing.csv"))
         self.assertTrue(exists(pathData / "featureDataset.csv"))
+
+    # Testa la funzionalità di validazione con K Fold. Verifica che i nuovi dataset siano creati correttamente.
 
     def test_ValidazioneControl_KFold(self):
         """
@@ -86,6 +91,9 @@ class TestValidazioneControl(unittest.TestCase):
             self.assertTrue(exists(pathData / StringaTrain))
             self.assertTrue(exists(pathData / StringaTest))
 
+    # Testa la funzionalità di validazione con K Fold quando il valore "k" non è corretto.
+# Verifica che nessun nuovo dataset sia creato e che la risposta HTTP sia 400 (Bad Request).
+
     def test_ValidazioneControl_kFold_Fail(self):
         """
         Tests when the user wants to validate a dataset with kFold and the "k" value is not correct
@@ -116,6 +124,8 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertFalse(exists(pathData / StringaTrain))
         self.assertFalse(exists(pathData / StringaTest))
 
+    # Testa la funzionalità di validazione senza divisione del dataset.
+    # Verifica che i nuovi dataset siano creati correttamente.
     def test_ValidazioneControl_NoSplit(self):
         """
         Tests when the user wants not to validate the dataset and has to upload both training and testing
@@ -143,6 +153,10 @@ class TestValidazioneControl(unittest.TestCase):
         pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         self.assertTrue(exists(pathData / "Data_training.csv"))
         self.assertTrue(exists(pathData / "Data_testing.csv"))
+
+# Testa la funzionalità di validazione senza divisione del dataset quando il dataset di test non è stato caricato.
+# Verifica che nessun nuovo dataset sia creato e che la risposta HTTP sia 400 (Bad Request).
+
 
     def test_ValidazioneControl_NoSplit_Fail(self):
         """
@@ -173,6 +187,7 @@ class TestValidazioneControl(unittest.TestCase):
         self.assertFalse(exists(pathData / "Data_training.csv"))
         self.assertFalse(exists(pathData / "Data_testing.csv"))
 
+    # Distrugge l'ambiente dei test, rimuovendo i file temporanei creati.
     def tearDown(self):
         pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         files_to_keep = ["bupa.csv"]
@@ -188,6 +203,8 @@ class TestValidazioneControl(unittest.TestCase):
 
 
 class TestKFold(unittest.TestCase):
+
+    # Imposta l'ambiente per i test, creando una copia del dataset di test "bupa.csv" nella directory dei test.
     def setUp(self):
         # path del dataset a disposizione del testing
         pathOrigin = pathlib.Path(__file__).parents[0] / "testingFiles"
@@ -203,6 +220,7 @@ class TestKFold(unittest.TestCase):
 
         self.assertTrue(exists(pathMock / "bupa.csv"))
 
+    # Testa la funzionalità di K-Fold validation. Verifica che i nuovi dataset siano creati correttamente.
     def test_KFold(self):
         """
         Tests when the user wants to validate a dataset with kFold and checks if the new datasets exist
@@ -220,6 +238,7 @@ class TestKFold(unittest.TestCase):
             self.assertTrue(exists(pathData / StringaTrain))
             self.assertTrue(exists(pathData / StringaTest))
 
+    # Distrugge l'ambiente dei test, rimuovendo i file temporanei creati.
     def tearDown(self):
         pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         files_to_keep = ["bupa.csv"]
@@ -234,6 +253,8 @@ class TestKFold(unittest.TestCase):
                     print(f"File {file} eliminato.")
 
 class TestSimpleSplit(unittest.TestCase):
+
+    # Imposta l'ambiente per i test, creando una copia del dataset di test "bupa.csv" nella directory dei test.
     def setUp(self):
         # path del dataset a disposizione del testing
         pathOrigin = pathlib.Path(__file__).parents[0] / "testingFiles"
@@ -248,6 +269,10 @@ class TestSimpleSplit(unittest.TestCase):
         g.close()
 
         self.assertTrue(exists(pathMock / "bupa.csv"))
+
+    
+    #Verifica quando l'utente desidera convalidare un dataset con SimpleSplit.
+    #Verifica se i nuovi dataset esistono e se hanno il numero corretto di righe.
 
     def test_simpleSplit(self):
         """
@@ -270,6 +295,9 @@ class TestSimpleSplit(unittest.TestCase):
             exists(pathlib.Path(__file__).parents[0] / "testingFiles" / "Data_training.csv")
         )
 
+  
+    #Metodo di pulizia eseguito dopo il test.
+    #Rimuove i file CSV generati durante il test, mantenendo solo il file "bupa.csv".
     def tearDown(self):
         pathData = pathlib.Path(__file__).parents[0] / "testingFiles"
         files_to_keep = ["bupa.csv"]

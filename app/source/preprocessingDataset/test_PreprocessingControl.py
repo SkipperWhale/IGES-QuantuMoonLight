@@ -8,10 +8,11 @@ from app import app
 
 
 class TestPreprocessingControl(unittest.TestCase):
+
+    # Imposta l'ambiente per i test, copiando alcuni file di dati utilizzati nei test.
     def setUp(self):
-        # path del dataset a disposizione del testing
+      
         pathOrigin = pathlib.Path(__file__).parents[0] / "testingFiles"
-        # path della cartella dove scrivere i files che verranno letti dai test
         pathMock = pathlib.Path(__file__).parents[0]
 
         f = open((pathMock / "Data_testing.csv").__str__(), "a+")
@@ -47,6 +48,8 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertTrue(exists(pathMock / "bupa.csv"))
         self.assertTrue(exists(pathMock / "bupaToPredict.csv"))
 
+    # Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire la classificazione senza alcun preprocessing.
+    # Verifica se esistono i due dataset da classificare.
     def test_PreprocessingControl_onlyQSVM(self):
         """
         Tests when the user wants to execute classification but no Preprocessing.
@@ -88,6 +91,8 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertTrue(exists(pathMock / "DataSetTrainPreprocessato.csv"))
         self.assertTrue(exists(pathMock / "DataSetTestPreprocessato.csv"))
 
+# Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire solo la selezione del prototipo sul dataset di addestramento.
+# Verifica se esistono i due dataset da classificare e il dataset di addestramento ridotto.
     def test_PreprocessingControl_onlyPS(self):
         """
         Test when the user wants to execute only Prototype Selection on the training dataset.
@@ -127,6 +132,8 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertTrue(exists(pathMock / "DataSetTestPreprocessato.csv"))
         self.assertTrue(exists(pathMock / "reducedTrainingPS.csv"))
 
+    # Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire solo la prototype selection sul dataset di addestramento,
+    # ma cerca di ridurre le righe con più righe rispetto al DataSet originale. Verifica che i due dataset non siano stati creati.
     def test_PreprocessingControl_failPS(self):
         """
         Test when the user wants to execute only Prototype Selection on the training dataset,
@@ -167,6 +174,8 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertFalse(exists(pathData / "DataSetTestPreprocessato.csv"))
         self.assertFalse(exists(pathData / "reducedTrainingPS.csv"))
 
+    # Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire solo lla Feature Extraction
+    # sui dataset di addestramento e test. Verifica se esistono i due dataset da classificare e i dataset di addestramento e test ridotti.
     def test_PreprocessingControl_onlyFE(self):
         """
         Test when the user wants to execute only Feature Extraction on the training and testing dataset.
@@ -208,6 +217,9 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertTrue(exists(pathData / "Test_Feature_Extraction.csv"))
         self.assertTrue(exists(pathData / "Train_Feature_Extraction.csv"))
 
+# Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire solo l'estrazione delle caratteristiche
+# sui dataset di addestramento e test, ma cerca di ridurre le colonne con più colonne rispetto al DataSet originale.
+# Verifica che tutti i dataset non siano stati creati.
     def test_PreprocessingControl_failFE(self):
         """
         Test when the user wants to execute only Feature Extraction on the training and testing dataset,
@@ -249,6 +261,10 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertFalse(exists(pathData / "reducedTrainingPS.csv"))
         self.assertFalse(exists(pathData / "Test_Feature_Extraction.csv"))
         self.assertFalse(exists(pathData / "Train_Feature_Extraction.csv"))
+
+# Testa la funzionalità di controllo di preprocessing quando l'utente vuole eseguire l'estrazione delle caratteristiche sui dataset di addestramento e test
+# e la selezione del prototipo sul dataset di addestramento.
+# Verifica se esistono i due dataset da classificare e i dataset di addestramento e test ridotti.
 
     def test_PreprocessingControl_FE_PS(self):
         """
@@ -292,6 +308,7 @@ class TestPreprocessingControl(unittest.TestCase):
         self.assertTrue(exists(pathData / "Test_Feature_Extraction.csv"))
         self.assertTrue(exists(pathData / "Train_Feature_Extraction.csv"))
 
+    # Pulisce l'ambiente di test rimuovendo tutti i file creati.
     def tearDown(self):
         """
         Remove all the files created

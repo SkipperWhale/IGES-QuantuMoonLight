@@ -7,8 +7,10 @@ from sqlalchemy_utils import database_exists, create_database
 from app import app, db
 from app.source.model.models import User, Article
 
-
+#Classe di test per Utente
 class TestUser(TestCase):
+
+    #Setup
     def setUp(self):
         super().setUp()
         app.config[
@@ -34,6 +36,8 @@ class TestUser(TestCase):
             db.session.add(user)
             db.session.commit()
 
+    # Testa la funzionalità di rimozione dell'utente, verificando prima che l'account esista,
+    # quindi lo elimina e verifica che sia stato rimosso correttamente.
     def test_removeUser(self):
         """
         test the removeUser functionality, checking first that the account exists,
@@ -56,6 +60,8 @@ class TestUser(TestCase):
             )
             db.session.commit()
 
+    # Testa la funzionalità di modifica dell'utente, verificando prima che l'account esista,
+    # quindi lo modifica e verifica che sia stato modificato correttamente.
     def test_modifyUser(self):
         """
         test the modifyUser functionality, checking first that the account exists,
@@ -88,8 +94,9 @@ class TestUser(TestCase):
         with app.app_context():
             db.drop_all()
 
-
+#Classe di test per il BLOG
 class TestList(TestCase):
+    #SetUp
     def setUp(self):
         super().setUp()
         app.config[
@@ -148,6 +155,7 @@ class TestList(TestCase):
             db.session.add(art2)
             db.session.commit()
 
+    # Testa la funzionalità di ottenere tutti gli utenti registrati sul sito.
     def test_listUser(self):
         """
         test the functionality of getting all registered users to the site
@@ -165,6 +173,7 @@ class TestList(TestCase):
         self.assertTrue(User.query.filter_by(email="giuseppeverdi@gmail.com").first())
         db.session.commit()
 
+    # Testa la funzionalità di ottenere gli articoli scritti da un utente.
     def test_listArticlesUser(self):
         """
         test the functionality of getting articles written by a user
@@ -188,6 +197,7 @@ class TestList(TestCase):
         )
         db.session.commit()
 
+    # Testa la funzionalità di ottenere gli articoli scritti tra due date.
     def test_listArticlesData(self):
         """
         tests the functionality of getting articles written between two dates
@@ -212,6 +222,7 @@ class TestList(TestCase):
         )
         db.session.commit()
 
+    #TearDown
     def tearDown(self):
         with app.app_context():
             db.drop_all()
