@@ -38,7 +38,7 @@ After verifying that you have these prerequisites you will need to proceed in th
 </ol>
    <h4>Else if you want to run on prompt:</h4>
    <ol>
-<li> clone the github repository</li> (git clone https://github.com/Robertales/QuantuMoonLight)
+<li> clone the github repository</li> (git clone https://github.com/SkipperWhale/IGES-QuantuMoonLight.git)
 <li>Open Anaconda Prompt and install the environment.yml using this command (you can find in ./env/yourOS/environment.yml)<br>
    "conda env create -f environment.yml" <br>
    next activate the environment<br>
